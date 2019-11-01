@@ -12,7 +12,8 @@ namespace AddonSolicitudesCompras.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        
+
+        public int numero_solicitud { get; set; }
         public string codigo_proveedor { set; get; }
         public string proveedor { set; get; }
         public int numero_operacion { get; set; }

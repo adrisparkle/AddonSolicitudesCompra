@@ -208,6 +208,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PurchaseDNController.cs" />
     <Compile Include="Controllers\PurchaseCheckController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseQuotationController.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Models\PurchaseQuotation.cs" />
     <Compile Include="Models\PurchaseOrderDetail.cs" />
     <Compile Include="Models\PurchaseQuotationDetail.cs" />
+    <Compile Include="Models\Prueba.cs" />
     <Compile Include="Models\PurchaseRequestDetail.cs" />
     <Compile Include="Models\PurchaseSearch.cs" />
     <Compile Include="Models\PurchaseRequest.cs" />

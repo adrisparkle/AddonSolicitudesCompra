@@ -15,12 +15,12 @@ using Newtonsoft.Json.Linq;
 
 namespace AddonSolicitudesCompras.Controllers
 {
-    public partial class FacturaController : ApiController
+    public class MercanciaController : ApiController
     {
         private ApplicationDbContext _context;
 
 
-        public FacturaController()
+        public MercanciaController()
         {
 
             _context = new ApplicationDbContext();
@@ -29,26 +29,24 @@ namespace AddonSolicitudesCompras.Controllers
 
         // GET api/Contract
         [HttpGet]
-        [Route("api/PurchaseCheck/{id}")]
-        public IHttpActionResult PurchaseCheck(int id)
+        [Route("api/PurchaseDN/{id}")]
+        public IHttpActionResult PurchaseDN(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\"," +
-                               "\r\nop.\"CardCode\" as \"codigo_proveedor\"," +
-                               "\r\nop.\"CardName\" as \"proveedor\"," +
-                               "\r\nop.\"BPLName\" as \"regional\"," +
-                               "\r\nop.\"NumAtCard\" as \"numero_factura\"," +
+            var queryProduct = "select \r\nopor.\"CardCode\" as \"codigo_proveedor\"," +
+                               "\r\nopor.\"CardName\" as \"proveedor\"," +
+                               "\r\nopor.\"BPLName\" as \"regional\"," +
                                "\r\nf.\"SeriesName\" as \"serie\"," +
-                               "\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\"," +
-                               "\r\nop.\"DocNum\" as \"numero_documento\"," +
-                               "\r\nop.\"DocDate\" as \"fecha_contabilizacion\", " +
-                               "\r\nop.\"DocDueDate\" as \"fecha_valida\", " +
-                               "\r\nop.\"TaxDate\" as \"fecha_documento\"" +
+                               "\r\nopor.\"U_UOrganiza\" as \"unidad_organizacional\"," +
+                               "\r\nopor.\"DocNum\" as \"numero_documento\"," +
+                               "\r\nopor.\"DocDate\" as \"fecha_contabilizacion\"," +
+                               " \r\nopor.\"DocDueDate\" as \"fecha_valida\", " +
+                               "\r\nopor.\"TaxDate\" as \"fecha_documento\"" +
                                "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
                                "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
                                "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1" +
-                               "\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"" +
+                               "\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1\r\n" +
+                               " on oprq.\"DocEntry\" = pqt1.\"BaseEntry\"" +
                                "\r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt" +
                                "\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"" +
                                "\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"" +
@@ -57,18 +55,21 @@ namespace AddonSolicitudesCompras.Controllers
                                "\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"" +
                                "\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor" +
                                "\r\non opor.\"DocEntry\" = por1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1" +
-                               "\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPCH\" op" +
-                               "\r\non op.\"DocEntry\" = pch1.\"DocEntry\"" +
                                "\r\nleft join ucatolica.\"NNM1\" f" +
                                "\r\non opor.\"Series\" = f.\"Series\"" +
-                               "\r\nwhere op.\"DocNum\" = " + id;
+                               "\r\nwhere oprq.\"DocNum\" = " + id+
+                                " group by opor.\"CardCode\"," +
+                               "\r\nopor.\"CardName\"," +
+                               "\r\nopor.\"BPLName\"," +
+                               "\r\nf.\"SeriesName\"," +
+                               "\r\nopor.\"U_UOrganiza\"," +
+                               "\r\nopor.\"DocNum\"," +
+                               "\r\nopor.\"DocDate\"," +
+                               " \r\nopor.\"DocDueDate\", " +
+                               "\r\nopor.\"TaxDate\"";
             var rawresult = _context.Database.SqlQuery<PurchaseCheck>(queryProduct).ToList();
             var formatedData = rawresult.Select(x => new
             {
-                x.numero_solicitud,
                 x.codigo_proveedor,
                 x.proveedor,
                 x.numero_documento,
@@ -84,8 +85,8 @@ namespace AddonSolicitudesCompras.Controllers
             return Ok(formatedData);
         }
         [HttpGet]
-        [Route("api/PurchaseCheckDetail/{id}")]
-        public IHttpActionResult PurchaseCheckDetail(int id)
+        [Route("api/PurchaseDNDetail/{id}")]
+        public IHttpActionResult PurchaseDNDetail(int id)
         {
             //convertir precio a float o double y cantidad a int!!
             var queryProduct = "select \r\npch1.\"ItemCode\" as \"codigo\"," +
@@ -118,7 +119,7 @@ namespace AddonSolicitudesCompras.Controllers
                                "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
                                "\r\nleft outer join \"UCATOLICA\".\"OPCH\" op" +
                                "\r\non op.\"DocEntry\" = pch1.\"DocEntry\"" +
-                               "\r\nwhere op.\"DocNum\" = " + id
+                               "\r\nwhere oprq.\"DocNum\" = " + id
                                + " group by pch1.\"ItemCode\"," +
                                "\r\npch1.\"Dscription\"," +
                                "\r\npch1.\"Quantity\"," +

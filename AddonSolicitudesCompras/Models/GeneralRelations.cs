@@ -18,6 +18,8 @@ namespace AddonSolicitudesCompras.Models
         public DateTime? fecha_oferta { get; set; }
         public int? numero_pedido { set; get; }
         public DateTime? fecha_pedido { get; set; }
+        public int? numero_mercancia { set; get; }
+        public DateTime? fecha_mercancia { get; set; }
         public int? numero_factura { set; get; }
         public DateTime? fecha_factura { get; set; }
         public int? numero_pago { set; get; }

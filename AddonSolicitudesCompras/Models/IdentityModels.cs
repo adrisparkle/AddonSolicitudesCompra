@@ -30,10 +30,6 @@ namespace AddonSolicitudesCompras.Models
         public DbSet<Rol> Rols { get; set; }
         public DbSet<RolhasAccess> RolshaAccesses { get; set; }
         public DbSet<CustomUser> CustomUsers { get; set; }
-        public DbSet<PurchaseSearch> PurchaseSearch { get; set; }
-        public DbSet<PurchaseRequest> PurchaseRequest { get; set; }
-        public DbSet<GeneralRelations> GeneralRelations { get; set; }
-        public DbSet<PurchaseRequestDetail> PurchaseRequestDetail { get; set; }
 
 
 
