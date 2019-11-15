@@ -21,7 +21,7 @@ namespace AddonSolicitudesCompras.Models
         public int numero_documento { get; set; }
         public string unidad_organizacional { get; set; }
         public DateTime fecha_contabilizacion { get; set; }
-        public DateTime fecha_entrega { get; set; }
+        public DateTime fecha_valida { get; set; }
         public DateTime fecha_documento { get; set; }
 
     }

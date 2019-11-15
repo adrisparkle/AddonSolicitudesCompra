@@ -64,7 +64,8 @@ namespace AddonSolicitudesCompras.Controllers
                                "\r\non op.\"DocEntry\" = pch1.\"DocEntry\"" +
                                "\r\nleft join ucatolica.\"NNM1\" f" +
                                "\r\non opor.\"Series\" = f.\"Series\"" +
-                               "\r\nwhere op.\"DocNum\" = " + id;
+                               "\r\nwhere op.\"DocNum\" = " + id +
+                " group by \r\noprq.\"DocNum\",\r\nop.\"CardCode\",\r\nop.\"CardName\",\r\nop.\"BPLName\",\r\nop.\"NumAtCard\",\r\nf.\"SeriesName\",\r\nop.\"U_UOrganiza\",\r\nop.\"DocNum\",\r\nop.\"DocDate\", \r\nop.\"DocDueDate\", \r\nop.\"TaxDate\"";
             var rawresult = _context.Database.SqlQuery<PurchaseCheck>(queryProduct).ToList();
             var formatedData = rawresult.Select(x => new
             {
@@ -77,7 +78,7 @@ namespace AddonSolicitudesCompras.Controllers
                 x.unidad_organizacional,
                 x.regional,
                 fecha_contabilizacion = x.fecha_contabilizacion.ToString("dd/MM/yyyy"),
-                fecha_entrega = x.fecha_entrega.ToString("dd/MM/yyyy"),
+                fecha_valida = x.fecha_valida.ToString("dd/MM/yyyy"),
                 fecha_documento = x.fecha_documento.ToString("dd/MM/yyyy"),
 
             });
