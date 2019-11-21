@@ -58,21 +58,9 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult PurchaseRequest(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select \r\nop.\"DocNum\" as \"id\", \r\nop.\"Requester\" as " +
-                               "\"codigo_solicitante\", \r\nop.\"ReqName\" as \"solicitante\", " +
-                               "\r\nf.\"SeriesName\" as \"serie\", \r\nop.\"BPLName\" as \"regional\"," +
-                               "\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\", " +
-                               "\r\nop.\"DocDate\" as \"fecha_contabilizacion\", " +
-                               "\r\nop.\"DocDueDate\" as \"fecha_valida\", \r\nop.\"TaxDate\" as " +
-                               "\"fecha_documento\", \r\nop.\"ReqDate\" as \"fecha_requerida\"" +
-                               "\r\nfrom \"UCATOLICA\".\"OPRQ\" op\r\nleft join ucatolica.\"NNM1\" " +
-                               "f\r\non op.\"Series\" = f.\"Series\"\r\nwhere op.\"DocNum\" = " + id
-                + " group by op.\"DocNum\", \r\nop.\"Requester\", \r\nop.\"ReqName\", " +
-                               "\r\nf.\"SeriesName\", \r\nop.\"BPLName\"," +
-                               "\r\nop.\"U_UOrganiza\", " +
-                               "\r\nop.\"DocDate\", " +
-                               "\r\nop.\"DocDueDate\", \r\nop.\"TaxDate\"," +
-                               " \r\nop.\"ReqDate\"";
+            var queryProduct = "select op.\"DocNum\" as \"id\", \r\nop.\"Requester\" as \"codigo_solicitante\", \r\nop.\"ReqName\" as \"solicitante\", \r\nf.\"SeriesName\" as \"serie\", \r\nop.\"BPLName\" as \"regional\",\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\", \r\nop.\"DocDate\" as \"fecha_contabilizacion\", \r\nop.\"DocDueDate\" as \"fecha_valida\", \r\nop.\"TaxDate\" as \"fecha_documento\", \r\nop.\"ReqDate\" as \"fecha_requerida\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\")\tas \t\"espicificaciones_tecnicas\",\r\nTO_VARCHAR(op.\"U_DocInfProyecto\")\tas \t\"informe_proyecto\",\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\")\tas \t\"informe_circunstanciado\",\r\nTO_VARCHAR(op.\"U_APagoDirecto\")\tas \t\"pago_directo\",\r\nTO_VARCHAR(op.\"U_Propuesta\")\tas \t\"propuesta\",\r\nTO_VARCHAR(op.\"U_CuadroComparativo\")\tas \t\"cuadro_comparativo\",\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\")\tas \t\"acta_evaluacion\",\r\nTO_VARCHAR(op.\"U_InformeProceso\")\tas \t\"informe_proceso\",\r\nTO_VARCHAR(op.\"U_InformeLegal\")\tas \t\"informe_legal\",\r\nTO_VARCHAR(op.\"U_Pliego\")\tas \t\"pliego\",\r\nTO_VARCHAR(op.\"U_Contrato\")\tas \t\"contrato\"\r\nfrom \"UCATOLICA\".\"OPRQ\" op\r\nleft join ucatolica.\"NNM1\" \r\nf on op.\"Series\" = f.\"Series\"\r\nwhere op.\"DocNum\" =" 
+                               + id + 
+                               " group by op.\"DocNum\", \r\nop.\"Requester\", op.\"ReqName\", \r\nf.\"SeriesName\", op.\"BPLName\",\r\nop.\"U_UOrganiza\", \r\nop.\"DocDate\", \r\nop.\"DocDueDate\", op.\"TaxDate\",\r\nop.\"ReqDate\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\"),\r\nTO_VARCHAR(op.\"U_DocInfProyecto\"),\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\"),\r\nTO_VARCHAR(op.\"U_APagoDirecto\"),\r\nTO_VARCHAR(op.\"U_Propuesta\"),\r\nTO_VARCHAR(op.\"U_CuadroComparativo\"),\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\"),\r\nTO_VARCHAR(op.\"U_InformeProceso\"),\r\nTO_VARCHAR(op.\"U_InformeLegal\"),\r\nTO_VARCHAR(op.\"U_Pliego\"),\r\nTO_VARCHAR(op.\"U_Contrato\")";
             var rawresult = _context.Database.SqlQuery<PurchaseRequest>(queryProduct).ToList();
             var formatedData = rawresult.Select(x => new
             {
@@ -86,6 +74,17 @@ namespace AddonSolicitudesCompras.Controllers
                 fecha_valida = x.fecha_valida.ToString("dd/MM/yyyy"),
                 fecha_documento = x.fecha_documento.ToString("dd/MM/yyyy"),
                 fecha_requerida = x.fecha_requerida.ToString("dd/MM/yyyy"),
+                x.espicificaciones_tecnicas,
+                x.informe_proyecto,
+                x.informe_circunstanciado,
+                x.pago_directo,
+                x.propuesta,
+                x.cuadro_comparativo,
+                x.acta_evaluacion,
+                x.informe_proceso,
+                x.informe_legal,
+                x.pliego,
+                x.contrato,
 
             });
             return Ok(formatedData);

@@ -214,6 +214,7 @@
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseQuotationController.cs" />
     <Compile Include="Controllers\PurchasePaymentController.cs" />
+    <Compile Include="Controllers\DocsAnexosController.cs" />
     <Compile Include="Controllers\PurchaseRequestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -232,6 +233,8 @@
     <Compile Include="Models\CustomSchema.cs" />
     <Compile Include="Models\People.cs" />
     <Compile Include="Models\GeneralRelations.cs" />
+    <Compile Include="Models\PurchaseDN.cs" />
+    <Compile Include="Models\PurchaseDNDetail.cs" />
     <Compile Include="Models\PurchasePaymentDetail.cs" />
     <Compile Include="Models\PurchasePayment.cs" />
     <Compile Include="Models\PurchaseCheck.cs" />
@@ -241,6 +244,7 @@
     <Compile Include="Models\PurchaseOrderDetail.cs" />
     <Compile Include="Models\PurchaseQuotationDetail.cs" />
     <Compile Include="Models\Prueba.cs" />
+    <Compile Include="Models\DocsAnexos.cs" />
     <Compile Include="Models\PurchaseRequestDetail.cs" />
     <Compile Include="Models\PurchaseSearch.cs" />
     <Compile Include="Models\PurchaseRequest.cs" />
