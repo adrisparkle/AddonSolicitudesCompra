@@ -68,7 +68,7 @@ namespace AddonSolicitudesCompras.Controllers
                                "\r\nleft join ucatolica.\"NNM1\" f" +
                                "\r\non opch.\"Series\" = f.\"Series\"" +
                                "\r\nwhere ovpm.\"DocNum\" = " + id +
-                "group by\r\noprq.\"DocNum\",\r\novpm.\"CardCode\",\r\novpm.\"CardName\",\r\novpm.\"BPLName\",\r\nf.\"SeriesName\",\r\novpm.\"DocNum\",\r\novpm.\"DocDate\",\r\novpm.\"DocDueDate\",\r\novpm.\"TaxDate\",\r\novpm.\"TransId\"";
+                " group by\r\noprq.\"DocNum\",\r\novpm.\"CardCode\",\r\novpm.\"CardName\",\r\novpm.\"BPLName\",\r\nf.\"SeriesName\",\r\novpm.\"DocNum\",\r\novpm.\"DocDate\",\r\novpm.\"DocDueDate\",\r\novpm.\"TaxDate\",\r\novpm.\"TransId\"";
             var rawresult = _context.Database.SqlQuery<PurchasePayment>(queryProduct).ToList();
             var formatedData = rawresult.Select(x => new
             {
