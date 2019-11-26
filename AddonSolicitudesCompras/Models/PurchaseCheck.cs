@@ -34,5 +34,6 @@ namespace AddonSolicitudesCompras.Models
         public string informe_legal { get; set; }
         public string pliego { get; set; }
         public string contrato { get; set; }
+        public string estado { get; set; }
     }
 }

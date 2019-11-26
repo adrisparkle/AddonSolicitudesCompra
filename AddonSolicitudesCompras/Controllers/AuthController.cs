@@ -10,6 +10,7 @@ using AddonSolicitudesCompras.Logic;
 using AddonSolicitudesCompras.Models;
 using AddonSolicitudesCompras.Models.Auth;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace AddonSolicitudesCompras.Controllers
 {
@@ -32,6 +33,7 @@ namespace AddonSolicitudesCompras.Controllers
         [Route("api/auth/GetToken")]
         public IHttpActionResult GetToken([FromBody]JObject credentials)
         {
+            String ret = "No";
             if (credentials["username"] == null || credentials["password"] == null)
                 return BadRequest();
 
@@ -39,39 +41,48 @@ namespace AddonSolicitudesCompras.Controllers
             string password = credentials["password"].ToString();
 
             CustomUser user = _context.CustomUsers.FirstOrDefault(u => u.UserPrincipalName == username);
+             //var queryProduct = "select *\r\nfrom \"ADMNALRRHH\".\"User\" where \"UserPrincipalName\" = '"+username+"'";
+            //var rawresult = _context.Database.SqlQuery<CustomUser>(queryProduct).ToList();
+            /*var formatedData = rawresult.Select(x => new
+            {
+                x.UserPrincipalName
 
+            });
+            */
             //if(user==null)
             //     return Unauthorized();
 
             if (!activeDirectory.ActiveDirectoryAuthenticate(username, password))
                 return Unauthorized();
+            
 
             user.Token = validator.getToken(user);
             user.TokenCreatedAt = DateTime.Now;
             user.RefreshToken = validator.getRefreshToken(user);
             user.RefreshTokenCreatedAt = DateTime.Now;
-            _context.SaveChanges();
+           _context.SaveChanges();
 
-            //HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            //response.Headers.Add("Id", user.Id.ToString());
-            //response.Headers.Add("Token", user.Token);
-            //response.Headers.Add("RefreshToken", user.RefreshToken);
-            //return ResponseMessage(response);
-            var rols = activeDirectory.getUserRols(user);
-            var principalrol = rols.OrderByDescending(x => x.Level).FirstOrDefault();
-            if (principalrol == null)
-            {
-                return Unauthorized();
-            }
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Headers.Add("Id", user.Id.ToString());
+            response.Headers.Add("Token", user.Token);
+            response.Headers.Add("RefreshToken", user.RefreshToken);
+            return ResponseMessage(response);
+            //var rols = activeDirectory.getUserRols(user);
+            //var principalrol = rols.OrderByDescending(x => x.Level).FirstOrDefault();
+            //if (principalrol == null)
+            //{
+            //    return Unauthorized();
+            //}
 
-            dynamic respose = new JObject();
-            respose.Id = user.Id;
-            respose.Token = user.Token;
-            respose.RefreshToken = user.RefreshToken;
-            respose.ExpiresIn = validateauth.tokenLife;
-            respose.RefreshExpiresIn = validateauth.refeshtokenLife;
-            respose.AccessDefault = principalrol.Resource.Path;
-            return Ok(respose);
+            //dynamic respose = new JObject();
+            //respose.Id = user.Id;
+            //respose.Token = user.Token;
+            //respose.RefreshToken = user.RefreshToken;
+            //respose.ExpiresIn = validateauth.tokenLife;
+            //respose.RefreshExpiresIn = validateauth.refeshtokenLife;
+            //respose.AccessDefault = principalrol.Resource.Path;
+            //return Ok(respose);
+           // return Ok("blah");
         }
 
         // POST: /api/auth/RefreshToken/

@@ -24,6 +24,6 @@ namespace AddonSolicitudesCompras.Models
         public DateTime fecha_documento { get; set; }
         public DateTime fecha_vencimiento { get; set; }
         public DateTime fecha_operacion { get; set; }
-
+        public string estado { get; set; }
     }
 }

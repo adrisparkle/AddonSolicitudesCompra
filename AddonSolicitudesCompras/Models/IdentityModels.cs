@@ -33,8 +33,6 @@ namespace AddonSolicitudesCompras.Models
 
 
 
-
-
         static ApplicationDbContext()
         {
             Database.SetInitializer<ApplicationDbContext>(null);

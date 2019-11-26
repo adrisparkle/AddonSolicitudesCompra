@@ -58,9 +58,9 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult PurchaseRequest(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select op.\"DocNum\" as \"id\", \r\nop.\"Requester\" as \"codigo_solicitante\", \r\nop.\"ReqName\" as \"solicitante\", \r\nf.\"SeriesName\" as \"serie\", \r\nop.\"BPLName\" as \"regional\",\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\", \r\nop.\"DocDate\" as \"fecha_contabilizacion\", \r\nop.\"DocDueDate\" as \"fecha_valida\", \r\nop.\"TaxDate\" as \"fecha_documento\", \r\nop.\"ReqDate\" as \"fecha_requerida\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\")\tas \t\"espicificaciones_tecnicas\",\r\nTO_VARCHAR(op.\"U_DocInfProyecto\")\tas \t\"informe_proyecto\",\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\")\tas \t\"informe_circunstanciado\",\r\nTO_VARCHAR(op.\"U_APagoDirecto\")\tas \t\"pago_directo\",\r\nTO_VARCHAR(op.\"U_Propuesta\")\tas \t\"propuesta\",\r\nTO_VARCHAR(op.\"U_CuadroComparativo\")\tas \t\"cuadro_comparativo\",\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\")\tas \t\"acta_evaluacion\",\r\nTO_VARCHAR(op.\"U_InformeProceso\")\tas \t\"informe_proceso\",\r\nTO_VARCHAR(op.\"U_InformeLegal\")\tas \t\"informe_legal\",\r\nTO_VARCHAR(op.\"U_Pliego\")\tas \t\"pliego\",\r\nTO_VARCHAR(op.\"U_Contrato\")\tas \t\"contrato\"\r\nfrom \"UCATOLICA\".\"OPRQ\" op\r\nleft join ucatolica.\"NNM1\" \r\nf on op.\"Series\" = f.\"Series\"\r\nwhere op.\"DocNum\" =" 
+            var queryProduct = "select op.\"DocNum\" as \"id\", \r\nop.\"Requester\" as \"codigo_solicitante\", \r\nop.\"ReqName\" as \"solicitante\", \r\nf.\"SeriesName\" as \"serie\", \r\nop.\"BPLName\" as \"regional\",\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\", \r\nop.\"DocDate\" as \"fecha_contabilizacion\", \r\nop.\"DocDueDate\" as \"fecha_valida\", \r\nop.\"TaxDate\" as \"fecha_documento\", \r\nop.\"ReqDate\" as \"fecha_requerida\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\")\tas \t\"espicificaciones_tecnicas\",\r\nTO_VARCHAR(op.\"U_DocInfProyecto\")\tas \t\"informe_proyecto\",\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\")\tas \t\"informe_circunstanciado\",\r\nTO_VARCHAR(op.\"U_APagoDirecto\")\tas \t\"pago_directo\",\r\nTO_VARCHAR(op.\"U_Propuesta\")\tas \t\"propuesta\",\r\nTO_VARCHAR(op.\"U_CuadroComparativo\")\tas \t\"cuadro_comparativo\",\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\")\tas \t\"acta_evaluacion\",\r\nTO_VARCHAR(op.\"U_InformeProceso\")\tas \t\"informe_proceso\",\r\nTO_VARCHAR(op.\"U_InformeLegal\")\tas \t\"informe_legal\",\r\nTO_VARCHAR(op.\"U_Pliego\")\tas \t\"pliego\",\r\nTO_VARCHAR(op.\"U_Contrato\")\tas \t\"contrato\",\r\ncase \r\nwhen op.\"CANCELED\"='Y' THEN 'Cancelado'\r\nwhen op.\"CANCELED\"='N' THEN 'Aprobado'\r\nend as \"estado\"\r\nfrom \"UCATOLICA\".\"OPRQ\" op\r\nleft join ucatolica.\"NNM1\" \r\nf on op.\"Series\" = f.\"Series\"\r\nwhere op.\"DocNum\" =" 
                                + id + 
-                               " group by op.\"DocNum\", \r\nop.\"Requester\", op.\"ReqName\", \r\nf.\"SeriesName\", op.\"BPLName\",\r\nop.\"U_UOrganiza\", \r\nop.\"DocDate\", \r\nop.\"DocDueDate\", op.\"TaxDate\",\r\nop.\"ReqDate\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\"),\r\nTO_VARCHAR(op.\"U_DocInfProyecto\"),\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\"),\r\nTO_VARCHAR(op.\"U_APagoDirecto\"),\r\nTO_VARCHAR(op.\"U_Propuesta\"),\r\nTO_VARCHAR(op.\"U_CuadroComparativo\"),\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\"),\r\nTO_VARCHAR(op.\"U_InformeProceso\"),\r\nTO_VARCHAR(op.\"U_InformeLegal\"),\r\nTO_VARCHAR(op.\"U_Pliego\"),\r\nTO_VARCHAR(op.\"U_Contrato\")";
+                               " group by op.\"DocNum\", \r\nop.\"Requester\", op.\"ReqName\", \r\nf.\"SeriesName\", op.\"BPLName\",\r\nop.\"U_UOrganiza\", \r\nop.\"DocDate\", \r\nop.\"DocDueDate\", op.\"TaxDate\",\r\nop.\"ReqDate\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\"),\r\nTO_VARCHAR(op.\"U_DocInfProyecto\"),\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\"),\r\nTO_VARCHAR(op.\"U_APagoDirecto\"),\r\nTO_VARCHAR(op.\"U_Propuesta\"),\r\nTO_VARCHAR(op.\"U_CuadroComparativo\"),\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\"),\r\nTO_VARCHAR(op.\"U_InformeProceso\"),\r\nTO_VARCHAR(op.\"U_InformeLegal\"),\r\nTO_VARCHAR(op.\"U_Pliego\"),\r\nTO_VARCHAR(op.\"U_Contrato\"),\r\nop.\"CANCELED\"";
             var rawresult = _context.Database.SqlQuery<PurchaseRequest>(queryProduct).ToList();
             var formatedData = rawresult.Select(x => new
             {
@@ -85,6 +85,7 @@ namespace AddonSolicitudesCompras.Controllers
                 x.informe_legal,
                 x.pliego,
                 x.contrato,
+                x.estado
 
             });
             return Ok(formatedData);
@@ -182,11 +183,13 @@ namespace AddonSolicitudesCompras.Controllers
             //convertir precio a float o double y cantidad a int!!
             var queryProduct = "select " +
                                "\r\noprq.\"DocNum\" as \"numero_solicitud\"," +
-                               "\r\noprq.\"DocDate\" as \"fecha_solicitud\"" +
+                               "\r\noprq.\"DocDate\" as \"fecha_solicitud\"," +
+                               "\r\noprq.\"CANCELED\" as \"estado\"" +
                                "from \"UCATOLICA\".\"OPRQ\" oprq\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"\r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"POR1\" por1\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor\r\non opor.\"DocEntry\" = por1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1\r\non jdt1.\"TransId\" = ojdt.\"TransId\"\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"\r\nwhere oprq.\"DocNum\" = "
                                + id +
                                " group by oprq.\"DocNum\"," +
-                               "\r\noprq.\"DocDate\"";
+                               "\r\noprq.\"DocDate\"," +
+                               "\r\noprq.\"CANCELED\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
@@ -194,6 +197,7 @@ namespace AddonSolicitudesCompras.Controllers
             {
                 x.numero_solicitud,
                 fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
+                x.estado
             });
             return Ok(formatedData);
         }
@@ -204,7 +208,8 @@ namespace AddonSolicitudesCompras.Controllers
             //convertir precio a float o double y cantidad a int!!
             var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\"," +
                                "\r\nopqt.\"DocNum\" as \"numero_oferta\", " +
-                               "\r\nopqt.\"DocDate\" as \"fecha_oferta\"" +
+                               "\r\nopqt.\"DocDate\" as \"fecha_oferta\"," +
+                               "\r\nopqt.\"CANCELED\" as \"estado\"" +
                                "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
                                "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
                                "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
@@ -245,7 +250,8 @@ namespace AddonSolicitudesCompras.Controllers
                                + id +
                                " group by oprq.\"DocNum\", " +
                                "\r\nopqt.\"DocNum\"," +
-                               " \r\nopqt.\"DocDate\"\r\n";
+                               " \r\nopqt.\"DocDate\",\r\n" +
+                               "\r\nopqt.\"CANCELED\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
@@ -273,7 +279,8 @@ namespace AddonSolicitudesCompras.Controllers
             //convertir precio a float o double y cantidad a int!!
             var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\"," +
                                "\r\nopor.\"DocNum\" as \"numero_pedido\"," +
-                               "\r\nopor.\"DocDate\" as \"fecha_pedido\"" +
+                               "\r\nopor.\"DocDate\" as \"fecha_pedido\"," +
+                               "\r\nopor.\"CANCELED\" as \"estado\"" +
                                "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
                                "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
                                "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
@@ -315,7 +322,8 @@ namespace AddonSolicitudesCompras.Controllers
                                " group by oprq.\"DocNum\"," +
                                "\r\noprq.\"DocDate\"," +
                                "\r\nopor.\"DocNum\"," +
-                               "\r\nopor.\"DocDate\"";
+                               "\r\nopor.\"DocDate\"," +
+                               "\r\nopor.\"CANCELED\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
@@ -343,7 +351,8 @@ namespace AddonSolicitudesCompras.Controllers
             //convertir precio a float o double y cantidad a int!!
             var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\"," +
                                "\r\nopdn.\"DocNum\" as \"numero_mercancia\"," +
-                               "\r\nopdn.\"DocDate\" as \"fecha_mercancia\"" +
+                               "\r\nopdn.\"DocDate\" as \"fecha_mercancia\"," +
+                               "\r\nopdn.\"CANCELED\" as \"estado\"" +
                                "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
                                "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
                                "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
@@ -385,7 +394,8 @@ namespace AddonSolicitudesCompras.Controllers
                                " group by oprq.\"DocNum\"," +
                                "\r\noprq.\"DocDate\"," +
                                "\r\nopdn.\"DocNum\"," +
-                               "\r\nopdn.\"DocDate\"";
+                               "\r\nopdn.\"DocDate\"," +
+                               "\r\nopdn.\"CANCELED\""; ;
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
@@ -413,7 +423,8 @@ namespace AddonSolicitudesCompras.Controllers
             //convertir precio a float o double y cantidad a int!!
             var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\", " +
                                "\r\nopch.\"DocNum\" as \"numero_factura\"," +
-                               " \r\nopch.\"DocDate\" as \"fecha_factura\"" +
+                               " \r\nopch.\"DocDate\" as \"fecha_factura\"," +
+                               "\r\nopch.\"CANCELED\" as \"estado\"" +
                                "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
                                "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
                                "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
@@ -455,7 +466,8 @@ namespace AddonSolicitudesCompras.Controllers
                                " group by oprq.\"DocNum\"," +
                                "\r\noprq.\"DocDate\"," +
                                "\r\nopch.\"DocNum\"," +
-                               "\r\nopch.\"DocDate\"";
+                               "\r\nopch.\"DocDate\"," +
+                               "\r\nopch.\"CANCELED\""; ;
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
@@ -483,7 +495,8 @@ namespace AddonSolicitudesCompras.Controllers
             //convertir precio a float o double y cantidad a int!!
             var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\", " +
                                "\r\novpm.\"DocNum\" as \"numero_pago\"," +
-                               " \r\novpm.\"DocDate\" as \"fecha_pago\"" +
+                               " \r\novpm.\"DocDate\" as \"fecha_pago\"," +
+                               " \r\novpm.\"Canceled\" as \"estado\"" +
                                "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
                                "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
                                "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
@@ -525,7 +538,8 @@ namespace AddonSolicitudesCompras.Controllers
                                " group by oprq.\"DocNum\"," +
                                "\r\noprq.\"DocDate\"," +
                                "\r\novpm.\"DocNum\"," +
-                               "\r\novpm.\"DocDate\"";
+                               "\r\novpm.\"DocDate\"," +
+                               "\r\novpm.\"Canceled\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 

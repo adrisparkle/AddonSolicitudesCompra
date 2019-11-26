@@ -33,11 +33,11 @@ namespace AddonSolicitudesCompras.Models.Auth
         [ForeignKey("AuthPeopleId")]
         public People Auth { get; set; }
         public int? AuthPeopleId { get; set; }
-
         public static int GetNextId(ApplicationDbContext _context)
         {
             return _context.Database.SqlQuery<int>("SELECT \"" + CustomSchema.Schema + "\".\"rrhh_User_sqs\".nextval FROM DUMMY;").ToList()[0];
         }
         
     }
+
 }
