@@ -25,9 +25,9 @@ namespace AddonSolicitudesCompras.Models
         public string cuenta_mayor { get; set; }
         public string codigo_cuenta { get; set; }
         public string cuenta_oficial { get; set; }
-        public string debito_bs { get; set; }
-        public string credito_bs { get; set; }
-        public string debito_ms { get; set; }
-        public string credito_ms { get; set; }
+        public decimal debito_bs { get; set; }
+        public decimal credito_bs { get; set; }
+        public decimal debito_ms { get; set; }
+        public decimal credito_ms { get; set; }
     }
 }

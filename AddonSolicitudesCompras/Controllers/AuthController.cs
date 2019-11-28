@@ -33,7 +33,6 @@ namespace AddonSolicitudesCompras.Controllers
         [Route("api/auth/GetToken")]
         public IHttpActionResult GetToken([FromBody]JObject credentials)
         {
-            String ret = "No";
             if (credentials["username"] == null || credentials["password"] == null)
                 return BadRequest();
 
