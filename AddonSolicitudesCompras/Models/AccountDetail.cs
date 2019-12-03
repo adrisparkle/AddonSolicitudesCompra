@@ -8,7 +8,7 @@ using System.Web;
 namespace AddonSolicitudesCompras.Models
 {
     [CustomSchema("AccountDetail")]
-    public class AccountDetail
+    public class AccountDetail: PurchaseRequestDetail
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -21,7 +21,6 @@ namespace AddonSolicitudesCompras.Models
         public string referencia1 { get; set; }
         public string referencia2 { get; set; }
         public string referencia3 { get; set; }
-        public string proyecto { get; set; }
         public string cuenta_mayor { get; set; }
         public string codigo_cuenta { get; set; }
         public string cuenta_oficial { get; set; }

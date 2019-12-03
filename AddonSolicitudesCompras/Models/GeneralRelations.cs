@@ -8,7 +8,7 @@ using System.Web;
 namespace AddonSolicitudesCompras.Models
 {
     [CustomSchema("GeneralRelations")]
-    public class GeneralRelations
+    public class GeneralRelations: PurchaseRequest
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -24,7 +24,6 @@ namespace AddonSolicitudesCompras.Models
         public DateTime? fecha_factura { get; set; }
         public int? numero_pago { set; get; }
         public DateTime? fecha_pago { get; set; }
-        public string estado { get; set; }
 
     }
 }

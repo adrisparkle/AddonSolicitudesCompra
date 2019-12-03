@@ -8,7 +8,7 @@ using System.Web;
 namespace AddonSolicitudesCompras.Models
 {
     [CustomSchema("PurchasePayment")]
-    public class PurchasePayment
+    public class PurchasePayment: PurchaseRequest
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -17,13 +17,8 @@ namespace AddonSolicitudesCompras.Models
         public string codigo_proveedor { set; get; }
         public string proveedor { set; get; }
         public int numero_operacion { get; set; }
-        public string serie { get; set; }
-        public string regional { get; set; }
         public int numero_documento { get; set; }
-        public DateTime fecha_contabilizacion { get; set; }
-        public DateTime fecha_documento { get; set; }
         public DateTime fecha_vencimiento { get; set; }
         public DateTime fecha_operacion { get; set; }
-        public string estado { get; set; }
     }
 }
