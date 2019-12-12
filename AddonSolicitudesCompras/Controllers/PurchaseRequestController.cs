@@ -95,9 +95,9 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult PurchaseRelations(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\", \r\noprq.\"DocDate\" as \"fecha_solicitud\", \r\nopqt.\"DocNum\" as \"numero_oferta\", \r\nopqt.\"DocDate\" as \"fecha_oferta\",\r\nopor.\"DocNum\" as \"numero_pedido\", \r\nopor.\"DocDate\" as \"fecha_pedido\",\r\nopdn.\"DocNum\" as \"numero_mercancia\", \r\nopdn.\"DocDate\" as \"fecha_mercancia\",\r\nopch.\"DocNum\" as \"numero_factura\", \r\nopch.\"DocDate\" as \"fecha_factura\",\r\novpm.\"DocNum\" as \"numero_pago\", \r\novpm.\"DocDate\" as \"fecha_pago\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"\r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"POR1\" por1\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor\r\non opor.\"DocEntry\" = por1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1\r\non jdt1.\"TransId\" = ojdt.\"TransId\"\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"\r\nwhere oprq.\"DocNum\" = " 
+            var queryProduct = "select oprq.\"DocNum\" as \"numero_solicitud\", \r\noprq.\"DocDate\" as \"fecha_solicitud\",\r\noprq.\"CANCELED\" as \"estado_solicitud\",\r\nopqt.\"DocNum\" as \"numero_oferta\", \r\nopqt.\"DocDate\" as \"fecha_oferta\",\r\nopqt.\"CANCELED\" as \"estado_oferta\",\r\nopor.\"DocNum\" as \"numero_pedido\", \r\nopor.\"DocDate\" as \"fecha_pedido\",\r\nopor.\"CANCELED\" as \"estado_pedido\",\r\nopdn.\"DocNum\" as \"numero_mercancia\", \r\nopdn.\"DocDate\" as \"fecha_mercancia\",\r\nopdn.\"CANCELED\" as \"estado_mercancia\",\r\nopch.\"DocNum\" as \"numero_factura\", \r\nopch.\"DocDate\" as \"fecha_factura\",\r\nopch.\"CANCELED\" as \"estado_factura\",\r\novpm.\"DocNum\" as \"numero_pago\", \r\novpm.\"DocDate\" as \"fecha_pago\",\r\novpm.\"Canceled\" as \"estado_pago\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"\r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"POR1\" por1\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor\r\non opor.\"DocEntry\" = por1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1\r\non jdt1.\"TransId\" = ojdt.\"TransId\"\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"\r\nwhere oprq.\"DocNum\" =" 
                                + id + 
-                               " group by oprq.\"DocNum\", \r\noprq.\"DocDate\", \r\nopqt.\"DocNum\", \r\nopqt.\"DocDate\",\r\nopor.\"DocNum\", \r\nopor.\"DocDate\",\r\nopdn.\"DocNum\", \r\nopdn.\"DocDate\",\r\nopch.\"DocNum\", \r\nopch.\"DocDate\",\r\novpm.\"DocNum\", \r\novpm.\"DocDate\"";
+                               " group by oprq.\"DocNum\", \r\noprq.\"DocNum\", \r\noprq.\"DocDate\",\r\noprq.\"CANCELED\",\r\nopqt.\"DocNum\", \r\nopqt.\"DocDate\",\r\nopqt.\"CANCELED\",\r\nopor.\"DocNum\", \r\nopor.\"DocDate\",\r\nopor.\"CANCELED\",\r\nopdn.\"DocNum\", \r\nopdn.\"DocDate\",\r\nopdn.\"CANCELED\",\r\nopch.\"DocNum\", \r\nopch.\"DocDate\",\r\nopch.\"CANCELED\",\r\novpm.\"DocNum\", \r\novpm.\"DocDate\",\r\novpm.\"Canceled\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
             
@@ -115,6 +115,12 @@ namespace AddonSolicitudesCompras.Controllers
                 fecha_factura = x.fecha_factura.HasValue ? x.fecha_factura.Value.ToString("dd/MM/yyyy") : string.Empty,
                 x.numero_pago,
                 fecha_pago = x.fecha_pago.HasValue ? x.fecha_pago.Value.ToString("dd/MM/yyyy") : string.Empty,
+                x.estado_factura,
+                x.estado_mercancia,
+                x.estado_oferta,
+                x.estado_pago,
+                x.estado_pedido,
+                x.estado_solicitud
 
             });
             return Ok(formatedData);
@@ -261,6 +267,7 @@ namespace AddonSolicitudesCompras.Controllers
                // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
                 x.numero_oferta,
                 fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
+                x.estado
                // x.numero_pedido,
                 //fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : string.Empty,
                 //x.numero_mercancia,
@@ -334,6 +341,7 @@ namespace AddonSolicitudesCompras.Controllers
                 //x.numero_oferta,
                 //fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
                 x.numero_pedido,
+                x.estado,
                 fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : string.Empty,
                 //x.numero_mercancia,
                 //fecha_mercancia = x.fecha_mercancia.HasValue ? x.fecha_mercancia.Value.ToString("dd/MM/yyyy") : string.Empty,
@@ -402,6 +410,7 @@ namespace AddonSolicitudesCompras.Controllers
             var formatedData = rawresult.Select(x => new
             {
                 x.numero_solicitud,
+                x.estado,
                 // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
                 //x.numero_oferta,
                 //fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
@@ -474,6 +483,7 @@ namespace AddonSolicitudesCompras.Controllers
             var formatedData = rawresult.Select(x => new
             {
                 x.numero_solicitud,
+                x.estado,
                 // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
                 //x.numero_oferta,
                 //fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
@@ -546,6 +556,7 @@ namespace AddonSolicitudesCompras.Controllers
             var formatedData = rawresult.Select(x => new
             {
                 x.numero_solicitud,
+                x.estado,
                 // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
                 //x.numero_oferta,
                 //fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,

@@ -14,6 +14,12 @@ namespace AddonSolicitudesCompras.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int numero_solicitud { set; get; }
         public DateTime fecha_solicitud { get; set; }
+        public string estado_solicitud { get; set; }
+        public string estado_oferta { get; set; }
+        public string estado_pedido { get; set; }
+        public string estado_mercancia { get; set; }
+        public string estado_factura { get; set; }
+        public string estado_pago { get; set; }
         public int? numero_oferta { set; get; }
         public DateTime? fecha_oferta { get; set; }
         public int? numero_pedido { set; get; }

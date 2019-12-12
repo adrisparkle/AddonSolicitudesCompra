@@ -211,6 +211,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CustomUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\VlirController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\PurchaseDNController.cs" />
     <Compile Include="Controllers\PurchaseCheckController.cs" />
@@ -252,7 +253,6 @@
     <Compile Include="Models\PurchaseOrderDetail.cs" />
     <Compile Include="Models\PurchaseQuotationDetail.cs" />
     <Compile Include="Models\Prueba.cs" />
-    <Compile Include="Models\DocsAnexos.cs" />
     <Compile Include="Models\PurchaseRequestDetail.cs" />
     <Compile Include="Models\PurchaseSearch.cs" />
     <Compile Include="Models\PurchaseRequest.cs" />

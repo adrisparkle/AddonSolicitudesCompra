@@ -81,7 +81,7 @@ namespace AddonSolicitudesCompras.Controllers
             var rawresult = _context.Database.SqlQuery<Account>(queryProduct).ToList();
             var formatedData = rawresult.Select(x => new
             {
-                
+                x.numero_solicitud,
                 x.numero_asiento,
                 x.serie,
                 x.numero_origen,

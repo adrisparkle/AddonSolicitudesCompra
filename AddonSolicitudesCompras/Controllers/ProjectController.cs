@@ -136,24 +136,32 @@ namespace AddonSolicitudesCompras.Controllers
                 "\r\n\tA.DIM1,\r\n\tA.DIM2";
 
             var rawresult = _context.Database.SqlQuery<ProjectInfo>(queryProduct).ToList();
-            var formatedData = rawresult.Select(x => new
+            if (rawresult != null)
             {
-                x.PROYECTO_CODIGO,
-                x.proyecto_nombre,
-                x.sucursal,
-                x.cuenta,
-                x.codigo_cuenta,
-                x.nombre_cuenta,
-                x.unidad_organizacional,
-                x.pei_po,
-                total_cuenta = Convert.ToSingle(x.total_cuenta),
-                total_dim = Convert.ToSingle(x.total_dim),
-                ejecutado = Convert.ToSingle(x.ejecutado),
+                var formatedData = rawresult.Select(x => new
+                {
+                    x.PROYECTO_CODIGO,
+                    x.proyecto_nombre,
+                    x.sucursal,
+                    x.cuenta,
+                    x.codigo_cuenta,
+                    x.nombre_cuenta,
+                    x.unidad_organizacional,
+                    x.pei_po,
+                    total_cuenta = Convert.ToSingle(x.total_cuenta),
+                    total_dim = Convert.ToSingle(x.total_dim),
+                    ejecutado = Convert.ToSingle(x.ejecutado),
 
-            });
-            return Ok(formatedData);
+                });
+                return Ok(formatedData);
+            }
+            else
+            {
+                return Ok("");
+            }
+            
         }
-
+        /*
         [HttpGet]
         [Route("api/ProjectVLIR/")]
         public IHttpActionResult ProjectVLIR()
@@ -273,6 +281,7 @@ namespace AddonSolicitudesCompras.Controllers
             });
             return Ok(formatedData);
         }
+         * */
     }
 
 }
