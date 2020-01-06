@@ -65,7 +65,7 @@ namespace AddonSolicitudesCompras.Controllers
             response.Headers.Add("Id", user.Id.ToString());
             response.Headers.Add("Token", user.Token);
             response.Headers.Add("RefreshToken", user.RefreshToken);
-            return ResponseMessage(response);
+            //return ResponseMessage(response);
             //var rols = activeDirectory.getUserRols(user);
             //var principalrol = rols.OrderByDescending(x => x.Level).FirstOrDefault();
             //if (principalrol == null)
@@ -73,14 +73,14 @@ namespace AddonSolicitudesCompras.Controllers
             //    return Unauthorized();
             //}
 
-            //dynamic respose = new JObject();
-            //respose.Id = user.Id;
-            //respose.Token = user.Token;
-            //respose.RefreshToken = user.RefreshToken;
-            //respose.ExpiresIn = validateauth.tokenLife;
-            //respose.RefreshExpiresIn = validateauth.refeshtokenLife;
+            dynamic respose = new JObject();
+            respose.Id = user.Id;
+            respose.Token = user.Token;
+            respose.RefreshToken = user.RefreshToken;
+            respose.ExpiresIn = validateauth.tokenLife;
+            respose.RefreshExpiresIn = validateauth.refeshtokenLife;
             //respose.AccessDefault = principalrol.Resource.Path;
-            //return Ok(respose);
+            return Ok(respose);
            // return Ok("blah");
         }
 

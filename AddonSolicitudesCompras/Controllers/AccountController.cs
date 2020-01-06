@@ -27,7 +27,7 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult AccountEntry(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select " +
+            var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\"," +
                                "\r\nf.\"SeriesName\" as \"serie\"," +
                                "\r\nojdt.\"Number\" as \"numero_asiento\"," +
                                "\r\nojdt.\"RefDate\" as \"fecha_contabilizacion\"," +
@@ -38,44 +38,45 @@ namespace AddonSolicitudesCompras.Controllers
                                "\r\nojdt.\"TransId\" as \"numero_transaccion\"," +
                                "\r\nojdt.\"Ref1\" as \"referencia1\"," +
                                "\r\nojdt.\"Ref2\" as \"referencia2\"" +
-                               "\r\nfrom " + dbName + ".\"OPRQ\" oprq" +
-                               "\r\ninner join " + dbName + ".\"PRQ1\" prq1" +
+                               "\r\nfrom  ucatolica.\"OPRQ\" oprq" +
+                               "\r\ninner join  "+ dbName +".\"PRQ1\" prq1" +
                                "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"PQT1\" pqt1" +
+                               "\r\nleft outer join  " + dbName + ".\"PQT1\" pqt1" +
                                "\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"OPQT\" opqt" +
+                               "\r\nleft outer join  " + dbName + ".\"OPQT\" opqt" +
                                "\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"POR1\" por1" +
+                               "\r\nleft outer join  " + dbName + ".\"POR1\" por1" +
                                "\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"OPOR\" opor" +
+                               "\r\nleft outer join  " + dbName + ".\"OPOR\" opor" +
                                "\r\non opor.\"DocEntry\" = por1.\"DocEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"PCH1\" pch1" +
+                               "\r\nleft outer join  " + dbName + ".\"PCH1\" pch1" +
                                "\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
                                "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"OPCH\" opch" +
+                               "\r\nleft outer join  " + dbName + ".\"OPCH\" opch" +
                                "\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"VPM2\" vpm2" +
+                               "\r\nleft outer join  " + dbName + ".\"VPM2\" vpm2" +
                                "\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"OVPM\" ovpm" +
+                               "\r\nleft outer join  " + dbName + ".\"OVPM\" ovpm" +
                                "\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"VPM1\" vpm1" +
+                               "\r\nleft outer join  " + dbName + ".\"VPM1\" vpm1" +
                                "\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"OJDT\" ojdt" +
+                               "\r\nleft outer join  " + dbName + ".\"OJDT\" ojdt" +
                                "\r\non ojdt.\"BaseRef\" = ovpm.\"DocNum\"" +
                                "\r\nand ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join " + dbName + ".\"JDT1\" jdt1" +
+                               "\r\nleft outer join  " + dbName + ".\"JDT1\" jdt1" +
                                "\r\non jdt1.\"TransId\" = ojdt.\"TransId\"" +
-                               "\r\nleft outer join " + dbName + ".\"OACT\" oact" +
+                               "\r\nleft outer join  " + dbName + ".\"OACT\" oact" +
                                "\r\non oact.\"AcctCode\" = jdt1.\"Account\"" +
                                "\r\nor oact.\"AcctCode\" = jdt1.\"Account\"" +
-                               "\r\nleft join " + dbName + ".\"NNM1\" f" +
+                               "\r\nleft join  " + dbName + ".\"NNM1\" f" +
                                "\r\non opch.\"Series\" = f.\"Series\"" +
-                               "\r\nwhere ovpm.\"DocNum\" = " + id + "" +
-                               "\r\n group by\r\nf.\"SeriesName\"," +
-                               "\r\nojdt.\"Number\",\r\nojdt.\"RefDate\"," +
-                               "\r\nojdt.\"DueDate\",\r\nojdt.\"TaxDate\"," +
-                               "\r\nojdt.\"Memo\",\r\nojdt.\"BaseRef\"," +
-                               "\r\nojdt.\"TransId\",\r\nojdt.\"Ref1\"," +
+                               "\r\nwhere ovpm.\"DocNum\" =  "+ id +
+                               "\r\ngroup by \r\noprq.\"DocNum\"," +
+                               "\r\nf.\"SeriesName\"," +
+                               "\r\nojdt.\"Number\",ojdt.\"RefDate\"," +
+                               "\r\nojdt.\"DueDate\",ojdt.\"TaxDate\"," +
+                               "\r\nojdt.\"Memo\",ojdt.\"BaseRef\"," +
+                               "\r\nojdt.\"TransId\",ojdt.\"Ref1\"," +
                                "\r\nojdt.\"Ref2\"";
 
             var rawresult = _context.Database.SqlQuery<Account>(queryProduct).ToList();
