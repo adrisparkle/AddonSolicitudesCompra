@@ -11,6 +11,8 @@ using AddonSolicitudesCompras.Models;
 using AddonSolicitudesCompras.Models.Auth;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.DirectoryServices;
+using Newtonsoft.Json;
 
 namespace AddonSolicitudesCompras.Controllers
 {

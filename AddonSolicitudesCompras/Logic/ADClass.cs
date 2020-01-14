@@ -140,7 +140,47 @@ namespace AddonSolicitudesCompras.Logic
             user = (UserPrincipal)ps.FindOne();
             return user;
         }
+        public List<dynamic> FiltrarRegional(FiltroUser user, IQueryable<dynamic> list)
+        {
+            var ubranches = getBranches(user).Select(x => x.Abr);
+            var filtered =
+                from Lc in list.ToList()
+                join branches in ubranches on Lc.regional equals branches
+                select Lc;
+            return filtered.ToList();
+        }
+        public List<Branches> getBranches(FiltroUser customUser)
+        {
+            List<Branches> roles = new List<Branches>();
+            DirectoryEntry obEntry = new DirectoryEntry("LDAP://UCB.BO",
+                "ADMNALRRHH",
+                "Rrhh1234");
+            DirectorySearcher srch = new DirectorySearcher(obEntry,
+                "(sAMAccountName=" + customUser.UserPrincipalName.Split('@')[0] + ")");
 
+            SearchResult res = srch.FindOne();
+
+            if (res != null)
+            {
+                DirectoryEntry obUser = new DirectoryEntry(res.Path, "ADMNALRRHH",
+                    "Rrhh1234");
+                object obGroups = obUser.Invoke("Groups");
+                List<string> grps = new List<string>();
+
+                foreach (var group in obUser.Properties["memberOf"])
+                {
+                    var ss = "{'" + group.ToString().Replace("=", "':'").Replace(",", "','") + "'}";
+                    var dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(ss);
+                    grps.Add(dic["CN"]);
+                }
+
+                var _context = new ApplicationDbContext();
+                roles = _context.Branch.ToList().Where(x => grps.Contains(x.ADGroupName)).ToList();
+
+            }
+
+            return roles;
+        }
         public List<Branches> getUserBranches(CustomUser customUser)
         {
             List<Branches> roles = new List<Branches>();

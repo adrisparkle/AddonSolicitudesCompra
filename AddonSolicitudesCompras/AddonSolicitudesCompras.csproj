@@ -227,6 +227,7 @@
     <Compile Include="Logic\ValidateToken.cs" />
     <Compile Include="Logic\ValidateAuth.cs" />
     <Compile Include="Models\AccountDetail.cs" />
+    <Compile Include="Models\Auth\FIltroUser.cs" />
     <Compile Include="Models\Auth\Rol.cs" />
     <Compile Include="Models\Auth\RolhasAccess.cs" />
     <Compile Include="Models\Auth\CustomUser.cs" />
@@ -238,6 +239,7 @@
     <Compile Include="Models\People.cs" />
     <Compile Include="Models\GeneralRelations.cs" />
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\ProjectName.cs" />
     <Compile Include="Models\VLIRInfo.cs" />
     <Compile Include="Models\VLIR.cs" />
     <Compile Include="Models\ProjectInfo.cs" />
