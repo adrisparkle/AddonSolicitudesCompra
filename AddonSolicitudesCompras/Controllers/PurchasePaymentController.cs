@@ -33,13 +33,14 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult PurchasePayment(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select oprq.\"DocNum\" as \"numero_solicitud\",\r\novpm.\"CardCode\" as \"codigo_proveedor\",\r\novpm.\"CardName\" as \"proveedor\",\r\novpm.\"BPLName\" as \"regional\",\r\nf.\"SeriesName\" as \"serie\",\r\novpm.\"DocNum\" as \"numero_documento\",\r\novpm.\"DocDate\" as \"fecha_contabilizacion\",\r\novpm.\"DocDueDate\" as \"fecha_vencimiento\",\r\novpm.\"TaxDate\" as \"fecha_documento\",\r\novpm.\"TransId\" as \"numero_operacion\",\r\ncase \r\nwhen ovpm.\"Canceled\"='Y' THEN 'Cancelado'\r\nwhen ovpm.\"Canceled\"='N' THEN 'Aprobado'\r\nend as \"estado\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"\r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"POR1\" por1\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor\r\non opor.\"DocEntry\" = por1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft join ucatolica.\"NNM1\" f\r\non opch.\"Series\" = f.\"Series\"\r\nwhere ovpm.\"DocNum\" =" 
+            var queryProduct = "select oprq.\"DocEntry\" as \"num_solicitud\",ovpm.\"DocEntry\" as \"num_pago\",\r\novpm.\"CardCode\" as \"codigo_proveedor\",\r\novpm.\"CardName\" as \"proveedor\",\r\novpm.\"BPLName\" as \"regional\",\r\nf.\"SeriesName\" as \"serie\",\r\novpm.\"DocNum\" as \"numero_documento\",\r\novpm.\"DocDate\" as \"fecha_contabilizacion\",\r\novpm.\"DocDueDate\" as \"fecha_vencimiento\",\r\novpm.\"TaxDate\" as \"fecha_documento\",\r\novpm.\"TransId\" as \"numero_operacion\",\r\ncase \r\nwhen ovpm.\"Canceled\"='Y' THEN 'Cancelado'\r\nwhen ovpm.\"Canceled\"='N' THEN 'Aprobado'\r\nend as \"estado\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"\r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"POR1\" por1\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor\r\non opor.\"DocEntry\" = por1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft join ucatolica.\"NNM1\" f\r\non opch.\"Series\" = f.\"Series\"\r\nwhere ovpm.\"DocEntry\" =" 
                                + id +
-                " group by\r\noprq.\"DocNum\",\r\novpm.\"CardCode\",\r\novpm.\"CardName\",\r\novpm.\"BPLName\",\r\nf.\"SeriesName\",\r\novpm.\"DocNum\",\r\novpm.\"DocDate\",\r\novpm.\"DocDueDate\",\r\novpm.\"TaxDate\",\r\novpm.\"TransId\",\r\novpm.\"Canceled\"";
+                " group by\r\noprq.\"DocEntry\",\r\novpm.\"DocEntry\",\r\novpm.\"CardCode\",\r\novpm.\"CardName\",\r\novpm.\"BPLName\",\r\nf.\"SeriesName\",\r\novpm.\"DocNum\",\r\novpm.\"DocDate\",\r\novpm.\"DocDueDate\",\r\novpm.\"TaxDate\",\r\novpm.\"TransId\",\r\novpm.\"Canceled\"";
             var rawresult = _context.Database.SqlQuery<PurchasePayment>(queryProduct).ToList();
             var formatedData = rawresult.Select(x => new
             {
-                x.numero_solicitud,
+                x.num_pago,
+                x.num_solicitud,
                 x.codigo_proveedor,
                 x.proveedor,
                 x.numero_documento,
@@ -87,7 +88,7 @@ namespace AddonSolicitudesCompras.Controllers
                                "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
                                "\r\nleft outer join \"UCATOLICA\".\"OPCH\" op" +
                                "\r\non op.\"DocEntry\" = pch1.\"DocEntry\"" +
-                               "\r\nwhere oprq.\"DocNum\" = " + id +
+                               "\r\nwhere oprq.\"DocEntry\" = " + id +
                                " group by " +
                                " pch1.\"ItemCode\"," +
                                "\r\npch1.\"Dscription\"," +

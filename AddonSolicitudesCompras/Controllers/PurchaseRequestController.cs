@@ -18,13 +18,13 @@ namespace AddonSolicitudesCompras.Controllers
     public class ComprasController : ApiController
     {
         private ApplicationDbContext _context;
-        
+
 
         public ComprasController()
         {
 
             _context = new ApplicationDbContext();
-     
+
         }
 
         // GET api/Contract
@@ -32,15 +32,7 @@ namespace AddonSolicitudesCompras.Controllers
         [Route("api/PurchaseSearch")]
         public IHttpActionResult PurchaseSearch()
         {
-            var query = "select \r\nop.\"DocNum\" as \"id\"," +
-                        " \r\nop.\"ReqName\" as \"solicitante\"," +
-                        "\r\nop.\"DocDate\" as \"fecha_contabilizacion\"," +
-                        " \r\nop.\"BPLName\" as \"regional\"," +
-                        "\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\" " +
-                        "\r\nfrom \"UCATOLICA\".\"OPRQ\" op" +
-                        "\r\nleft join ucatolica.\"NNM1\" f" +
-                        "\r\non op.\"Series\" = f.\"Series\"" +
-                        "\r\norder by op.\"DocDate\" desc";
+            var query = "select oprq.\"DocNum\" as \"numero_documento\",\r\noprq.\"ReqName\" as \"solicitante\",\r\noprq.\"DocDate\" as \"fecha_contabilizacion\",\r\noprq.\"BPLName\" as \"regional\",\r\noprq.\"U_UOrganiza\" as \"unidad_organizacional\",\r\noprq.\"DocEntry\" as \"id\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq\r\nleft join ucatolica.\"NNM1\" f\r\non oprq.\"Series\" = f.\"Series\"\r\norder by oprq.\"DocDate\" desc";
             var rawresult = _context.Database.SqlQuery<PurchaseSearch>(query).ToList();
             var formatedData = rawresult.Select(x => new
             {
@@ -48,7 +40,8 @@ namespace AddonSolicitudesCompras.Controllers
                 x.solicitante,
                 fecha_contabilizacion = x.fecha_contabilizacion.ToString("dd/MM/yyyy"),
                 x.regional,
-                x.unidad_organizacional
+                x.unidad_organizacional,
+                x.numero_documento
             });
 
             return Ok(formatedData);
@@ -58,8 +51,8 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult PurchaseRequest(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select op.\"DocNum\" as \"id\", \r\nop.\"Requester\" as \"codigo_solicitante\", \r\nop.\"ReqName\" as \"solicitante\", \r\nf.\"SeriesName\" as \"serie\", \r\nop.\"BPLName\" as \"regional\",\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\", \r\nop.\"DocDate\" as \"fecha_contabilizacion\", \r\nop.\"DocDueDate\" as \"fecha_valida\", \r\nop.\"TaxDate\" as \"fecha_documento\", \r\nop.\"ReqDate\" as \"fecha_requerida\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\")\tas \t\"espicificaciones_tecnicas\",\r\nTO_VARCHAR(op.\"U_DocInfProyecto\")\tas \t\"informe_proyecto\",\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\")\tas \t\"informe_circunstanciado\",\r\nTO_VARCHAR(op.\"U_APagoDirecto\")\tas \t\"pago_directo\",\r\nTO_VARCHAR(op.\"U_Propuesta\")\tas \t\"propuesta\",\r\nTO_VARCHAR(op.\"U_CuadroComparativo\")\tas \t\"cuadro_comparativo\",\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\")\tas \t\"acta_evaluacion\",\r\nTO_VARCHAR(op.\"U_InformeProceso\")\tas \t\"informe_proceso\",\r\nTO_VARCHAR(op.\"U_InformeLegal\")\tas \t\"informe_legal\",\r\nTO_VARCHAR(op.\"U_Pliego\")\tas \t\"pliego\",\r\nTO_VARCHAR(op.\"U_Contrato\")\tas \t\"contrato\",\r\ncase \r\nwhen op.\"CANCELED\"='Y' THEN 'Cancelado'\r\nwhen op.\"CANCELED\"='N' THEN 'Aprobado'\r\nend as \"estado\"\r\nfrom \"UCATOLICA\".\"OPRQ\" op\r\nleft join ucatolica.\"NNM1\" \r\nf on op.\"Series\" = f.\"Series\"\r\nwhere op.\"DocNum\" =" 
-                               + id + 
+            var queryProduct = "select op.\"DocNum\" as \"id\", \r\nop.\"Requester\" as \"codigo_solicitante\", \r\nop.\"ReqName\" as \"solicitante\", \r\nf.\"SeriesName\" as \"serie\", \r\nop.\"BPLName\" as \"regional\",\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\", \r\nop.\"DocDate\" as \"fecha_contabilizacion\", \r\nop.\"DocDueDate\" as \"fecha_valida\", \r\nop.\"TaxDate\" as \"fecha_documento\", \r\nop.\"ReqDate\" as \"fecha_requerida\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\")\tas \t\"espicificaciones_tecnicas\",\r\nTO_VARCHAR(op.\"U_DocInfProyecto\")\tas \t\"informe_proyecto\",\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\")\tas \t\"informe_circunstanciado\",\r\nTO_VARCHAR(op.\"U_APagoDirecto\")\tas \t\"pago_directo\",\r\nTO_VARCHAR(op.\"U_Propuesta\")\tas \t\"propuesta\",\r\nTO_VARCHAR(op.\"U_CuadroComparativo\")\tas \t\"cuadro_comparativo\",\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\")\tas \t\"acta_evaluacion\",\r\nTO_VARCHAR(op.\"U_InformeProceso\")\tas \t\"informe_proceso\",\r\nTO_VARCHAR(op.\"U_InformeLegal\")\tas \t\"informe_legal\",\r\nTO_VARCHAR(op.\"U_Pliego\")\tas \t\"pliego\",\r\nTO_VARCHAR(op.\"U_Contrato\")\tas \t\"contrato\",\r\ncase \r\nwhen op.\"CANCELED\"='Y' THEN 'Cancelado'\r\nwhen op.\"CANCELED\"='N' THEN 'Aprobado'\r\nend as \"estado\"\r\nfrom \"UCATOLICA\".\"OPRQ\" op\r\nleft join ucatolica.\"NNM1\" \r\nf on op.\"Series\" = f.\"Series\"\r\nwhere op.\"DocEntry\" ="
+                               + id +
                                " group by op.\"DocNum\", \r\nop.\"Requester\", op.\"ReqName\", \r\nf.\"SeriesName\", op.\"BPLName\",\r\nop.\"U_UOrganiza\", \r\nop.\"DocDate\", \r\nop.\"DocDueDate\", op.\"TaxDate\",\r\nop.\"ReqDate\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\"),\r\nTO_VARCHAR(op.\"U_DocInfProyecto\"),\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\"),\r\nTO_VARCHAR(op.\"U_APagoDirecto\"),\r\nTO_VARCHAR(op.\"U_Propuesta\"),\r\nTO_VARCHAR(op.\"U_CuadroComparativo\"),\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\"),\r\nTO_VARCHAR(op.\"U_InformeProceso\"),\r\nTO_VARCHAR(op.\"U_InformeLegal\"),\r\nTO_VARCHAR(op.\"U_Pliego\"),\r\nTO_VARCHAR(op.\"U_Contrato\"),\r\nop.\"CANCELED\"";
             var rawresult = _context.Database.SqlQuery<PurchaseRequest>(queryProduct).ToList();
             var formatedData = rawresult.Select(x => new
@@ -91,41 +84,6 @@ namespace AddonSolicitudesCompras.Controllers
             return Ok(formatedData);
         }
         [HttpGet]
-        [Route("api/PurchaseRelations/{id}")]
-        public IHttpActionResult PurchaseRelations(int id)
-        {
-            //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select oprq.\"DocNum\" as \"numero_solicitud\", \r\noprq.\"DocDate\" as \"fecha_solicitud\",\r\noprq.\"CANCELED\" as \"estado_solicitud\",\r\nopqt.\"DocNum\" as \"numero_oferta\", \r\nopqt.\"DocDate\" as \"fecha_oferta\",\r\nopqt.\"CANCELED\" as \"estado_oferta\",\r\nopor.\"DocNum\" as \"numero_pedido\", \r\nopor.\"DocDate\" as \"fecha_pedido\",\r\nopor.\"CANCELED\" as \"estado_pedido\",\r\nopdn.\"DocNum\" as \"numero_mercancia\", \r\nopdn.\"DocDate\" as \"fecha_mercancia\",\r\nopdn.\"CANCELED\" as \"estado_mercancia\",\r\nopch.\"DocNum\" as \"numero_factura\", \r\nopch.\"DocDate\" as \"fecha_factura\",\r\nopch.\"CANCELED\" as \"estado_factura\",\r\novpm.\"DocNum\" as \"numero_pago\", \r\novpm.\"DocDate\" as \"fecha_pago\",\r\novpm.\"Canceled\" as \"estado_pago\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"\r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"POR1\" por1\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor\r\non opor.\"DocEntry\" = por1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1\r\non jdt1.\"TransId\" = ojdt.\"TransId\"\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"\r\nwhere oprq.\"DocNum\" =" 
-                               + id + 
-                               " group by oprq.\"DocNum\", \r\noprq.\"DocNum\", \r\noprq.\"DocDate\",\r\noprq.\"CANCELED\",\r\nopqt.\"DocNum\", \r\nopqt.\"DocDate\",\r\nopqt.\"CANCELED\",\r\nopor.\"DocNum\", \r\nopor.\"DocDate\",\r\nopor.\"CANCELED\",\r\nopdn.\"DocNum\", \r\nopdn.\"DocDate\",\r\nopdn.\"CANCELED\",\r\nopch.\"DocNum\", \r\nopch.\"DocDate\",\r\nopch.\"CANCELED\",\r\novpm.\"DocNum\", \r\novpm.\"DocDate\",\r\novpm.\"Canceled\"";
-
-            var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
-            
-            var formatedData = rawresult.Select(x => new
-            {
-                x.numero_solicitud,
-                fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
-                x.numero_oferta,
-                fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
-                x.numero_pedido,
-                fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : string.Empty,
-                x.numero_mercancia,
-                fecha_mercancia = x.fecha_mercancia.HasValue ? x.fecha_mercancia.Value.ToString("dd/MM/yyyy") : string.Empty,
-                x.numero_factura,
-                fecha_factura = x.fecha_factura.HasValue ? x.fecha_factura.Value.ToString("dd/MM/yyyy") : string.Empty,
-                x.numero_pago,
-                fecha_pago = x.fecha_pago.HasValue ? x.fecha_pago.Value.ToString("dd/MM/yyyy") : string.Empty,
-                x.estado_factura,
-                x.estado_mercancia,
-                x.estado_oferta,
-                x.estado_pago,
-                x.estado_pedido,
-                x.estado_solicitud
-
-            });
-            return Ok(formatedData);
-        }
-        [HttpGet]
         [Route("api/PurchaseRequestDetail/{id}")]
         public IHttpActionResult PurchaseRequestDetail(int id)
         {
@@ -146,7 +104,7 @@ namespace AddonSolicitudesCompras.Controllers
                                "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq\r\n" +
                                " inner join \"UCATOLICA\".\"PRQ1\" prq1\r\n" +
                                " on oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
-                               "\r\nwhere oprq.\"DocNum\" = "+ id
+                               "\r\nwhere oprq.\"DocEntry\" = " + id
                                + " group by prq1.\"ItemCode\"," +
                                "\r\nprq1.\"Dscription\"," +
                                "\r\nprq1.\"FreeTxt\"," +
@@ -187,23 +145,19 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult solicitud(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select " +
-                               "\r\noprq.\"DocNum\" as \"numero_solicitud\"," +
-                               "\r\noprq.\"DocDate\" as \"fecha_solicitud\"," +
-                               "\r\noprq.\"CANCELED\" as \"estado\"" +
-                               "from \"UCATOLICA\".\"OPRQ\" oprq\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"\r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"POR1\" por1\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor\r\non opor.\"DocEntry\" = por1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1\r\non jdt1.\"TransId\" = ojdt.\"TransId\"\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"\r\nwhere oprq.\"DocNum\" = "
+            var queryProduct = "select\r\noprq.\"DocEntry\" as \"num_solicitud\",\r\noprq.\"DocNum\" as \"numero_solicitud\",\r\noprq.\"DocDate\" as \"fecha_solicitud\",\r\noprq.\"ReqName\" as \"solicitante\",\r\noprq.\"CANCELED\" as \"estado\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq \r\ninner join \"UCATOLICA\".\"PRQ1\" prq1 \r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\ninner join ucatolica.\"NNM1\" f\r\non oprq.\"Series\" = f.\"Series\"\r\nleft outer join \"UCATOLICA\".\"PQT1\" pqt1 \r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\" \r\nleft outer join\"UCATOLICA\".\"OPQT\" opqt \r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\" \r\nand TO_VARCHAR(oprq.\"DocNum\") = TO_VARCHAR(pqt1.\"BaseRef\")\r\nleft outer join \"UCATOLICA\".\"POR1\" por1 \r\non TO_VARCHAR(opqt.\"DocEntry\") = TO_VARCHAR(por1.\"BaseEntry\")\r\nand TO_VARCHAR(opqt.\"DocNum\") =TO_VARCHAR( por1.\"BaseRef\") \r\nleft outer join \"UCATOLICA\".\"OPOR\" opor \r\non opor.\"DocEntry\" = por1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1 \r\non TO_VARCHAR(pdn1.\"BaseRef\")= TO_VARCHAR(opor.\"DocNum\")\r\nand TO_VARCHAR(pdn1.\"BaseEntry\") = TO_VARCHAR(opor.\"DocEntry\")\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn \r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1 \r\non TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nand TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch \r\non opch.\"DocEntry\" = pch1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2 \r\non opch.\"DocEntry\" = vpm2.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm \r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1 \r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt \r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\" \r\nand TO_VARCHAR(ovpm.\"DocNum\") = TO_VARCHAR(ojdt.\"BaseRef\")\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1 \r\non jdt1.\"TransId\" = ojdt.\"TransId\" \r\nand TO_VARCHAR(ojdt.\"BaseRef\") = TO_VARCHAR(jdt1.\"BaseRef\")\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\" \r\nwhere oprq.\"DocEntry\" = "
                                + id +
-                               " group by oprq.\"DocNum\"," +
-                               "\r\noprq.\"DocDate\"," +
-                               "\r\noprq.\"CANCELED\"";
+                               " group by oprq.\"DocNum\",\r\noprq.\"DocDate\",\r\noprq.\"CANCELED\",\r\noprq.\"DocEntry\",\r\noprq.\"ReqName\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
             var formatedData = rawresult.Select(x => new
             {
-                x.numero_solicitud,
                 fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
-                x.estado
+                x.estado,
+                x.solicitante,
+                x.num_solicitud,
+                x.numero_solicitud
             });
             return Ok(formatedData);
         }
@@ -212,70 +166,20 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult oferta(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\"," +
-                               "\r\nopqt.\"DocNum\" as \"numero_oferta\", " +
-                               "\r\nopqt.\"DocDate\" as \"fecha_oferta\"," +
-                               "\r\nopqt.\"CANCELED\" as \"estado\"" +
-                               "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
-                               "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
-                               "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1" +
-                               "\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"" +
-                               "\r\ninner join\"UCATOLICA\".\"OPQT\" opqt" +
-                               "\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"" +
-                               "\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"POR1\" por1" +
-                               "\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"" +
-                               "\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPOR\" opor" +
-                               "\r\non opor.\"DocEntry\" = por1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1" +
-                               "\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"" +
-                               "\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn" +
-                               "\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1" +
-                               "\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch" +
-                               "\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2" +
-                               "\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm" +
-                               "\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1" +
-                               "\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt" +
-                               "\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"" +
-                               "\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1" +
-                               "\r\non jdt1.\"TransId\" = ojdt.\"TransId\"" +
-                               "\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"" +
-                               "\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"" +
-                               "\r\nwhere oprq.\"DocNum\" = "
+            var queryProduct = "select\r\nopqt.\"DocEntry\" as \"num_oferta\",\r\nopqt.\"DocNum\" as \"numero_oferta\",\r\nopqt.\"DocDate\" as \"fecha_oferta\",\r\nopqt.\"CANCELED\" as \"estado\",\r\nopqt.\"CardName\" as \"proveedor\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq \r\ninner join \"UCATOLICA\".\"PRQ1\" prq1 \r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\ninner join ucatolica.\"NNM1\" f\r\non oprq.\"Series\" = f.\"Series\"\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1 \r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\" \r\ninner join\"UCATOLICA\".\"OPQT\" opqt \r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\" \r\nand TO_VARCHAR(oprq.\"DocNum\") = TO_VARCHAR(pqt1.\"BaseRef\")\r\nleft outer join \"UCATOLICA\".\"POR1\" por1 \r\non TO_VARCHAR(opqt.\"DocEntry\") = TO_VARCHAR(por1.\"BaseEntry\")\r\nand TO_VARCHAR(opqt.\"DocNum\") =TO_VARCHAR( por1.\"BaseRef\") \r\nleft outer join \"UCATOLICA\".\"OPOR\" opor \r\non opor.\"DocEntry\" = por1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1 \r\non TO_VARCHAR(pdn1.\"BaseRef\")= TO_VARCHAR(opor.\"DocNum\")\r\nand TO_VARCHAR(pdn1.\"BaseEntry\") = TO_VARCHAR(opor.\"DocEntry\")\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn \r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1 \r\non TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nand TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch \r\non opch.\"DocEntry\" = pch1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2 \r\non opch.\"DocEntry\" = vpm2.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm \r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1 \r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt \r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\" \r\nand TO_VARCHAR(ovpm.\"DocNum\") = TO_VARCHAR(ojdt.\"BaseRef\")\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1 \r\non jdt1.\"TransId\" = ojdt.\"TransId\" \r\nand TO_VARCHAR(ojdt.\"BaseRef\") = TO_VARCHAR(jdt1.\"BaseRef\")\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\" \r\nwhere oprq.\"DocEntry\" = "
                                + id +
-                               " group by oprq.\"DocNum\", " +
-                               "\r\nopqt.\"DocNum\"," +
-                               " \r\nopqt.\"DocDate\",\r\n" +
-                               "\r\nopqt.\"CANCELED\"";
+                               "  group by opqt.\"DocNum\",\r\nopqt.\"DocDate\",\r\nopqt.\"CANCELED\",\r\nopqt.\"DocEntry\",\r\nopqt.\"CardName\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
             var formatedData = rawresult.Select(x => new
             {
-                x.numero_solicitud,
-               // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
                 x.numero_oferta,
-                fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
-                x.estado
-               // x.numero_pedido,
-                //fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_mercancia,
-                //fecha_mercancia = x.fecha_mercancia.HasValue ? x.fecha_mercancia.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_factura,
-                //fecha_factura = x.fecha_factura.HasValue ? x.fecha_factura.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_pago,
-                //fecha_pago = x.fecha_pago.HasValue ? x.fecha_pago.Value.ToString("dd/MM/yyyy") : string.Empty,
+                fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : null,
+                x.estado,
+                x.num_oferta,
+                x.proveedor
+
             });
             return Ok(formatedData);
         }
@@ -284,71 +188,20 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult pedido(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\"," +
-                               "\r\nopor.\"DocNum\" as \"numero_pedido\"," +
-                               "\r\nopor.\"DocDate\" as \"fecha_pedido\"," +
-                               "\r\nopor.\"CANCELED\" as \"estado\"" +
-                               "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
-                               "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
-                               "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1" +
-                               "\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"" +
-                               "\r\ninner join\"UCATOLICA\".\"OPQT\" opqt" +
-                               "\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"" +
-                               "\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"POR1\" por1" +
-                               "\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"" +
-                               "\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OPOR\" opor" +
-                               "\r\non opor.\"DocEntry\" = por1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1" +
-                               "\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"" +
-                               "\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn" +
-                               "\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1" +
-                               "\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch" +
-                               "\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2" +
-                               "\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm" +
-                               "\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1" +
-                               "\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt" +
-                               "\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"" +
-                               "\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1" +
-                               "\r\non jdt1.\"TransId\" = ojdt.\"TransId\"" +
-                               "\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"" +
-                               "\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"" +
-                               "\r\nwhere oprq.\"DocNum\" = "
+            var queryProduct = "select\r\nopor.\"DocEntry\" as \"num_pedido\",\r\nopor.\"DocNum\" as \"numero_pedido\",\r\nopor.\"DocDate\" as \"fecha_pedido\",\r\nopor.\"CANCELED\" as \"estado\",\r\nopor.\"CardName\" as \"proveedor\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq \r\ninner join \"UCATOLICA\".\"PRQ1\" prq1 \r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\ninner join ucatolica.\"NNM1\" f\r\non oprq.\"Series\" = f.\"Series\"\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1 \r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\" \r\ninner join\"UCATOLICA\".\"OPQT\" opqt \r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\" \r\nand TO_VARCHAR(oprq.\"DocNum\") = TO_VARCHAR(pqt1.\"BaseRef\")\r\ninner join \"UCATOLICA\".\"POR1\" por1 \r\non TO_VARCHAR(opqt.\"DocEntry\") = TO_VARCHAR(por1.\"BaseEntry\")\r\nand TO_VARCHAR(opqt.\"DocNum\") =TO_VARCHAR( por1.\"BaseRef\") \r\ninner join \"UCATOLICA\".\"OPOR\" opor \r\non opor.\"DocEntry\" = por1.\"DocEntry\" \r\nleft join \"UCATOLICA\".\"PDN1\" pdn1 \r\non TO_VARCHAR(pdn1.\"BaseRef\")= TO_VARCHAR(opor.\"DocNum\")\r\nand TO_VARCHAR(pdn1.\"BaseEntry\") = TO_VARCHAR(opor.\"DocEntry\")\r\nleft join \"UCATOLICA\".\"OPDN\" opdn \r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1 \r\non TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nand TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch \r\non opch.\"DocEntry\" = pch1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2 \r\non opch.\"DocEntry\" = vpm2.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm \r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1 \r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt \r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\" \r\nand TO_VARCHAR(ovpm.\"DocNum\") = TO_VARCHAR(ojdt.\"BaseRef\")\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1 \r\non jdt1.\"TransId\" = ojdt.\"TransId\" \r\nand TO_VARCHAR(ojdt.\"BaseRef\") = TO_VARCHAR(jdt1.\"BaseRef\")\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\" \r\nwhere oprq.\"DocEntry\" ="
                                + id +
-                               " group by oprq.\"DocNum\"," +
-                               "\r\noprq.\"DocDate\"," +
-                               "\r\nopor.\"DocNum\"," +
-                               "\r\nopor.\"DocDate\"," +
-                               "\r\nopor.\"CANCELED\"";
+                               "  group by opor.\"DocNum\",\r\nopor.\"DocDate\",\r\nopor.\"CANCELED\",\r\nopor.\"DocEntry\",\r\nopor.\"CardName\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
             var formatedData = rawresult.Select(x => new
             {
-                x.numero_solicitud,
-                // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
-                //x.numero_oferta,
-                //fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
                 x.numero_pedido,
                 x.estado,
-                fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_mercancia,
-                //fecha_mercancia = x.fecha_mercancia.HasValue ? x.fecha_mercancia.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_factura,
-                //fecha_factura = x.fecha_factura.HasValue ? x.fecha_factura.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_pago,
-                //fecha_pago = x.fecha_pago.HasValue ? x.fecha_pago.Value.ToString("dd/MM/yyyy") : string.Empty,
+                fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : null,
+                x.num_pedido,
+                x.proveedor
+                
             });
             return Ok(formatedData);
         }
@@ -357,71 +210,19 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult mercancia(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\"," +
-                               "\r\nopdn.\"DocNum\" as \"numero_mercancia\"," +
-                               "\r\nopdn.\"DocDate\" as \"fecha_mercancia\"," +
-                               "\r\nopdn.\"CANCELED\" as \"estado\"" +
-                               "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
-                               "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
-                               "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1" +
-                               "\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"" +
-                               "\r\ninner join\"UCATOLICA\".\"OPQT\" opqt" +
-                               "\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"" +
-                               "\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"POR1\" por1" +
-                               "\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"" +
-                               "\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OPOR\" opor" +
-                               "\r\non opor.\"DocEntry\" = por1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"PDN1\" pdn1" +
-                               "\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"" +
-                               "\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OPDN\" opdn" +
-                               "\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1" +
-                               "\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch" +
-                               "\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2" +
-                               "\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm" +
-                               "\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1" +
-                               "\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt" +
-                               "\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"" +
-                               "\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1" +
-                               "\r\non jdt1.\"TransId\" = ojdt.\"TransId\"" +
-                               "\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"" +
-                               "\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"" +
-                               "\r\nwhere oprq.\"DocNum\" = "
+            var queryProduct = "select\r\nopdn.\"DocEntry\" as \"num_mercancia\",\r\nopdn.\"DocNum\" as \"numero_mercancia\",\r\nopdn.\"DocDate\" as \"fecha_mercancia\",\r\nopdn.\"CANCELED\" as \"estado\",\r\nopdn.\"CardName\" as \"proveedor\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq \r\ninner join \"UCATOLICA\".\"PRQ1\" prq1 \r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\ninner join ucatolica.\"NNM1\" f\r\non oprq.\"Series\" = f.\"Series\"\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1 \r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\" \r\ninner join\"UCATOLICA\".\"OPQT\" opqt \r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\" \r\nand TO_VARCHAR(oprq.\"DocNum\") = TO_VARCHAR(pqt1.\"BaseRef\")\r\ninner join \"UCATOLICA\".\"POR1\" por1 \r\non TO_VARCHAR(opqt.\"DocEntry\") = TO_VARCHAR(por1.\"BaseEntry\")\r\nand TO_VARCHAR(opqt.\"DocNum\") =TO_VARCHAR( por1.\"BaseRef\") \r\ninner join \"UCATOLICA\".\"OPOR\" opor \r\non opor.\"DocEntry\" = por1.\"DocEntry\" \r\ninner join \"UCATOLICA\".\"PDN1\" pdn1 \r\non TO_VARCHAR(pdn1.\"BaseRef\")= TO_VARCHAR(opor.\"DocNum\")\r\nand TO_VARCHAR(pdn1.\"BaseEntry\") = TO_VARCHAR(opor.\"DocEntry\")\r\ninner join \"UCATOLICA\".\"OPDN\" opdn \r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"PCH1\" pch1 \r\non TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nand TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nleft outer join \"UCATOLICA\".\"OPCH\" opch \r\non opch.\"DocEntry\" = pch1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2 \r\non opch.\"DocEntry\" = vpm2.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm \r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1 \r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt \r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\" \r\nand TO_VARCHAR(ovpm.\"DocNum\") = TO_VARCHAR(ojdt.\"BaseRef\")\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1 \r\non jdt1.\"TransId\" = ojdt.\"TransId\" \r\nand TO_VARCHAR(ojdt.\"BaseRef\") = TO_VARCHAR(jdt1.\"BaseRef\")\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\" \r\nwhere oprq.\"DocEntry\" = "
                                + id +
-                               " group by oprq.\"DocNum\"," +
-                               "\r\noprq.\"DocDate\"," +
-                               "\r\nopdn.\"DocNum\"," +
-                               "\r\nopdn.\"DocDate\"," +
-                               "\r\nopdn.\"CANCELED\""; ;
+                               "  group by opdn.\"DocNum\",\r\nopdn.\"DocDate\",\r\nopdn.\"CANCELED\",\r\nopdn.\"DocEntry\",\r\nopdn.\"CardName\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
             var formatedData = rawresult.Select(x => new
             {
-                x.numero_solicitud,
                 x.estado,
-                // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
-                //x.numero_oferta,
-                //fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
-               // x.numero_pedido,
-               // fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : string.Empty,
                 x.numero_mercancia,
-                fecha_mercancia = x.fecha_mercancia.HasValue ? x.fecha_mercancia.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_factura,
-                //fecha_factura = x.fecha_factura.HasValue ? x.fecha_factura.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_pago,
-                //fecha_pago = x.fecha_pago.HasValue ? x.fecha_pago.Value.ToString("dd/MM/yyyy") : string.Empty,
+                fecha_mercancia = x.fecha_mercancia.HasValue ? x.fecha_mercancia.Value.ToString("dd/MM/yyyy") : null,
+                x.num_mercancia,
+                x.proveedor
             });
             return Ok(formatedData);
         }
@@ -430,71 +231,19 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult factura(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\", " +
-                               "\r\nopch.\"DocNum\" as \"numero_factura\"," +
-                               " \r\nopch.\"DocDate\" as \"fecha_factura\"," +
-                               "\r\nopch.\"CANCELED\" as \"estado\"" +
-                               "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
-                               "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
-                               "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1" +
-                               "\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"" +
-                               "\r\ninner join\"UCATOLICA\".\"OPQT\" opqt" +
-                               "\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"" +
-                               "\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"POR1\" por1" +
-                               "\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"" +
-                               "\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OPOR\" opor\r" +
-                               "\non opor.\"DocEntry\" = por1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1" +
-                               "\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"" +
-                               "\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn" +
-                               "\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"PCH1\" pch1" +
-                               "\r\non opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OPCH\" opch" +
-                               "\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2" +
-                               "\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm" +
-                               "\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1" +
-                               "\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt" +
-                               "\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"" +
-                               "\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1" +
-                               "\r\non jdt1.\"TransId\" = ojdt.\"TransId\"" +
-                               "\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"" +
-                               "\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"" +
-                               "\r\nwhere oprq.\"DocNum\" = "
+            var queryProduct = "select\r\nopch.\"DocEntry\" as \"num_factura\",\r\nopch.\"DocNum\" as \"numero_factura\",\r\nopch.\"DocDate\" as \"fecha_factura\",\r\nopch.\"CANCELED\" as \"estado\",\r\nopch.\"CardName\" as \"proveedor\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq \r\ninner join \"UCATOLICA\".\"PRQ1\" prq1 \r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\ninner join ucatolica.\"NNM1\" f\r\non oprq.\"Series\" = f.\"Series\"\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1 \r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\" \r\ninner join\"UCATOLICA\".\"OPQT\" opqt \r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\" \r\nand TO_VARCHAR(oprq.\"DocNum\") = TO_VARCHAR(pqt1.\"BaseRef\")\r\ninner join \"UCATOLICA\".\"POR1\" por1 \r\non TO_VARCHAR(opqt.\"DocEntry\") = TO_VARCHAR(por1.\"BaseEntry\")\r\nand TO_VARCHAR(opqt.\"DocNum\") =TO_VARCHAR( por1.\"BaseRef\") \r\ninner join \"UCATOLICA\".\"OPOR\" opor \r\non opor.\"DocEntry\" = por1.\"DocEntry\" \r\nleft join \"UCATOLICA\".\"PDN1\" pdn1 \r\non TO_VARCHAR(pdn1.\"BaseRef\")= TO_VARCHAR(opor.\"DocNum\")\r\nand TO_VARCHAR(pdn1.\"BaseEntry\") = TO_VARCHAR(opor.\"DocEntry\")\r\nleft join \"UCATOLICA\".\"OPDN\" opdn \r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\" \r\ninner join \"UCATOLICA\".\"PCH1\" pch1 \r\non TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nand TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\ninner join \"UCATOLICA\".\"OPCH\" opch \r\non opch.\"DocEntry\" = pch1.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM2\" vpm2 \r\non opch.\"DocEntry\" = vpm2.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OVPM\" ovpm \r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"VPM1\" vpm1 \r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\" \r\nleft outer join \"UCATOLICA\".\"OJDT\" ojdt \r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\" \r\nand TO_VARCHAR(ovpm.\"DocNum\") = TO_VARCHAR(ojdt.\"BaseRef\")\r\nleft outer join \"UCATOLICA\".\"JDT1\" jdt1 \r\non jdt1.\"TransId\" = ojdt.\"TransId\" \r\nand TO_VARCHAR(ojdt.\"BaseRef\") = TO_VARCHAR(jdt1.\"BaseRef\")\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\" \r\nwhere oprq.\"DocEntry\" ="
                                + id +
-                               " group by oprq.\"DocNum\"," +
-                               "\r\noprq.\"DocDate\"," +
-                               "\r\nopch.\"DocNum\"," +
-                               "\r\nopch.\"DocDate\"," +
-                               "\r\nopch.\"CANCELED\""; ;
+                               " group by opch.\"DocNum\",\r\nopch.\"DocDate\",\r\nopch.\"CANCELED\",\r\nopch.\"DocEntry\",\r\nopch.\"CardName\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
             var formatedData = rawresult.Select(x => new
             {
-                x.numero_solicitud,
                 x.estado,
-                // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
-                //x.numero_oferta,
-                //fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
-                // x.numero_pedido,
-                // fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : string.Empty,
-                // x.numero_mercancia,
-                // fecha_mercancia = x.fecha_mercancia.HasValue ? x.fecha_mercancia.Value.ToString("dd/MM/yyyy") : string.Empty,
                 x.numero_factura,
-                fecha_factura = x.fecha_factura.HasValue ? x.fecha_factura.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_pago,
-                //fecha_pago = x.fecha_pago.HasValue ? x.fecha_pago.Value.ToString("dd/MM/yyyy") : string.Empty,
+                fecha_factura = x.fecha_factura.HasValue ? x.fecha_factura.Value.ToString("dd/MM/yyyy") : null,
+                x.num_factura,
+                x.proveedor
             });
             return Ok(formatedData);
         }
@@ -503,71 +252,19 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult pago(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select \r\noprq.\"DocNum\" as \"numero_solicitud\", " +
-                               "\r\novpm.\"DocNum\" as \"numero_pago\"," +
-                               " \r\novpm.\"DocDate\" as \"fecha_pago\"," +
-                               " \r\novpm.\"Canceled\" as \"estado\"" +
-                               "\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq" +
-                               "\r\ninner join \"UCATOLICA\".\"PRQ1\" prq1" +
-                               "\r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1" +
-                               "\r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\"" +
-                               "\r\ninner join\"UCATOLICA\".\"OPQT\" opqt" +
-                               "\r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\"" +
-                               "\r\nand oprq.\"DocNum\" = pqt1.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"POR1\" por1" +
-                               "\r\non opqt.\"DocEntry\" = por1.\"BaseEntry\"" +
-                               "\r\nand opqt.\"DocNum\" = por1.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OPOR\" opor" +
-                               "\r\non opor.\"DocEntry\" = por1.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"PDN1\" pdn1" +
-                               "\r\non pdn1.\"BaseRef\" = opor.\"DocNum\"" +
-                               "\r\nand pdn1.\"BaseEntry\" = opor.\"DocEntry\"" +
-                               "\r\nleft outer join \"UCATOLICA\".\"OPDN\" opdn" +
-                               "\r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"PCH1\" pch1\r" +
-                               "\non opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\nand opor.\"DocEntry\" = pch1.\"BaseEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OPCH\" opch" +
-                               "\r\non opch.\"DocEntry\" = pch1.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"VPM2\" vpm2" +
-                               "\r\non opch.\"DocEntry\" = vpm2.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OVPM\" ovpm" +
-                               "\r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"VPM1\" vpm1" +
-                               "\r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\"" +
-                               "\r\ninner join \"UCATOLICA\".\"OJDT\" ojdt" +
-                               "\r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\"" +
-                               "\r\nand ovpm.\"DocNum\" = ojdt.\"BaseRef\"" +
-                               "\r\ninner join \"UCATOLICA\".\"JDT1\" jdt1" +
-                               "\r\non jdt1.\"TransId\" = ojdt.\"TransId\"" +
-                               "\r\nand ojdt.\"BaseRef\" = jdt1.\"BaseRef\"" +
-                               "\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\"" +
-                               "\r\nwhere oprq.\"DocNum\" = "
+            var queryProduct = "select\r\novpm.\"DocEntry\" as \"num_pago\",\r\novpm.\"DocNum\" as \"numero_pago\",\r\novpm.\"DocDate\" as \"fecha_pago\",\r\novpm.\"Canceled\" as \"estado\",\r\novpm.\"CardName\" as \"proveedor\"\r\nfrom \"UCATOLICA\".\"OPRQ\" oprq \r\ninner join \"UCATOLICA\".\"PRQ1\" prq1 \r\non oprq.\"DocEntry\" = prq1.\"DocEntry\"\r\ninner join ucatolica.\"NNM1\" f\r\non oprq.\"Series\" = f.\"Series\"\r\ninner join \"UCATOLICA\".\"PQT1\" pqt1 \r\non oprq.\"DocEntry\" = pqt1.\"BaseEntry\" \r\ninner join\"UCATOLICA\".\"OPQT\" opqt \r\non opqt.\"DocEntry\" = pqt1.\"DocEntry\" \r\nand TO_VARCHAR(oprq.\"DocNum\") = TO_VARCHAR(pqt1.\"BaseRef\")\r\ninner join \"UCATOLICA\".\"POR1\" por1 \r\non TO_VARCHAR(opqt.\"DocEntry\") = TO_VARCHAR(por1.\"BaseEntry\")\r\nand TO_VARCHAR(opqt.\"DocNum\") =TO_VARCHAR( por1.\"BaseRef\") \r\ninner join \"UCATOLICA\".\"OPOR\" opor \r\non opor.\"DocEntry\" = por1.\"DocEntry\" \r\nleft join \"UCATOLICA\".\"PDN1\" pdn1 \r\non TO_VARCHAR(pdn1.\"BaseRef\")= TO_VARCHAR(opor.\"DocNum\")\r\nand TO_VARCHAR(pdn1.\"BaseEntry\") = TO_VARCHAR(opor.\"DocEntry\")\r\nleft join \"UCATOLICA\".\"OPDN\" opdn \r\non opdn.\"DocEntry\" = pdn1.\"DocEntry\" \r\ninner join \"UCATOLICA\".\"PCH1\" pch1 \r\non TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\nand TO_VARCHAR(opor.\"DocEntry\") = TO_VARCHAR(pch1.\"BaseEntry\")\r\ninner join \"UCATOLICA\".\"OPCH\" opch \r\non opch.\"DocEntry\" = pch1.\"DocEntry\" \r\ninner join \"UCATOLICA\".\"VPM2\" vpm2 \r\non opch.\"DocEntry\" = vpm2.\"DocEntry\" \r\ninner join \"UCATOLICA\".\"OVPM\" ovpm \r\non vpm2.\"DocNum\" = ovpm.\"DocEntry\" \r\ninner join \"UCATOLICA\".\"VPM1\" vpm1 \r\non vpm1.\"DocNum\" = ovpm.\"DocEntry\" \r\ninner join \"UCATOLICA\".\"OJDT\" ojdt \r\non ojdt.\"CreatedBy\" = ovpm.\"DocEntry\" \r\nand TO_VARCHAR(ovpm.\"DocNum\") = TO_VARCHAR(ojdt.\"BaseRef\")\r\ninner join \"UCATOLICA\".\"JDT1\" jdt1 \r\non jdt1.\"TransId\" = ojdt.\"TransId\" \r\nand TO_VARCHAR(ojdt.\"BaseRef\") = TO_VARCHAR(jdt1.\"BaseRef\")\r\nand ojdt.\"CreatedBy\" = jdt1.\"CreatedBy\" \r\nwhere oprq.\"DocEntry\" ="
                                + id +
-                               " group by oprq.\"DocNum\"," +
-                               "\r\noprq.\"DocDate\"," +
-                               "\r\novpm.\"DocNum\"," +
-                               "\r\novpm.\"DocDate\"," +
-                               "\r\novpm.\"Canceled\"";
+                               "  group by ovpm.\"DocNum\",\r\novpm.\"DocDate\",\r\novpm.\"Canceled\",\r\novpm.\"DocEntry\",\r\novpm.\"CardName\"";
 
             var rawresult = _context.Database.SqlQuery<GeneralRelations>(queryProduct).ToList();
 
             var formatedData = rawresult.Select(x => new
             {
-                x.numero_solicitud,
                 x.estado,
-                // fecha_solicitud = x.fecha_solicitud.ToString("dd/MM/yyyy"),
-                //x.numero_oferta,
-                //fecha_oferta = x.fecha_oferta.HasValue ? x.fecha_oferta.Value.ToString("dd/MM/yyyy") : string.Empty,
-                // x.numero_pedido,
-                // fecha_pedido = x.fecha_pedido.HasValue ? x.fecha_pedido.Value.ToString("dd/MM/yyyy") : string.Empty,
-                // x.numero_mercancia,
-                // fecha_mercancia = x.fecha_mercancia.HasValue ? x.fecha_mercancia.Value.ToString("dd/MM/yyyy") : string.Empty,
-                //x.numero_factura,
-                //fecha_factura = x.fecha_factura.HasValue ? x.fecha_factura.Value.ToString("dd/MM/yyyy") : string.Empty,
                 x.numero_pago,
-                fecha_pago = x.fecha_pago.HasValue ? x.fecha_pago.Value.ToString("dd/MM/yyyy") : string.Empty,
+                fecha_pago = x.fecha_pago.HasValue ? x.fecha_pago.Value.ToString("dd/MM/yyyy") : null,
+                x.num_pago,
+                x.proveedor
             });
             return Ok(formatedData);
         }

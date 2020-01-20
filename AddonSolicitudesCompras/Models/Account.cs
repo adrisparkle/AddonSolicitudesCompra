@@ -12,7 +12,7 @@ namespace AddonSolicitudesCompras.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int numero_solicitud { get; set; }
+        public int num_solicitud { get; set; }
         public int numero_asiento { get; set; }
         public int numero_origen { get; set; }
         public int numero_transaccion { get; set; }

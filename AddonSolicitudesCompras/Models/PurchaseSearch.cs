@@ -12,11 +12,12 @@ namespace AddonSolicitudesCompras.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int id { set; get; }
+        public string id { set; get; }
         public string solicitante { get; set; }
         public string regional { get; set; }
         public DateTime fecha_contabilizacion { get; set; }
         public string unidad_organizacional { get; set; }
+        public int numero_documento { get; set; }
 
     }
 }
