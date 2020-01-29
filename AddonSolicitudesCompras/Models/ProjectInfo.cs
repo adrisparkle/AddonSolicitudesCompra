@@ -22,6 +22,7 @@ namespace AddonSolicitudesCompras.Models
         public decimal solicitado { get; set; }
         public decimal comprometido { get; set; }
         public decimal total_cuenta { get; set; }
+        public int numerador { get; set; }
        
     }
 

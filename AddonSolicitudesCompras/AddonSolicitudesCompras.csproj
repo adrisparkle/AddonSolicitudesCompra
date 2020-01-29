@@ -239,6 +239,8 @@
     <Compile Include="Models\People.cs" />
     <Compile Include="Models\GeneralRelations.cs" />
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\ProyPrueba.cs" />
+    <Compile Include="Models\ProjectJournal.cs" />
     <Compile Include="Models\ProjectName.cs" />
     <Compile Include="Models\VLIRInfo.cs" />
     <Compile Include="Models\VLIR.cs" />

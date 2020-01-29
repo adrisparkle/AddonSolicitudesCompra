@@ -13,6 +13,7 @@ namespace AddonSolicitudesCompras.Controllers
     public class ProyectoController : ApiController
     {
         private ApplicationDbContext _context;
+        private SapContext _SapContext;
         private string dbName = "ucatolica";
         
         public ProyectoController()
@@ -109,7 +110,94 @@ namespace AddonSolicitudesCompras.Controllers
             return Ok(formData);
         }
 
-}
+        [HttpGet]
+        [Route("api/ProjectJournal/{cuenta}")]
+        public IHttpActionResult ProjectJournal(string cuenta)
+        {
+            var queryP =
+                "select  \r\nj0.\"RefDate\" as \"fecha\", " +
+                "\r\nj0.\"TransId\" as \"trans_id\", " +
+                "\r\nj1.\"Line_ID\" as \"line_id\", " +
+                "\r\nj0.\"Memo\" as \"memo\", " +
+                "\r\nj1.\"Debit\", \r\nj1.\"Credit\", " +
+                "\r\nj0.\"LocTotal\" as \"total\"," +
+                "\r\nj1.\"Account\" as \"cuenta\"," +
+                "\r\nj1.\"ProfitCode\" as \"unidad_organizacional\"" +
+                "\r\nfrom ucatolica.\"OJDT\" j0" +
+                "\r\ninner join ucatolica.\"JDT1\" j1" +
+                "\r\non j1.\"TransId\" = j0.\"TransId\"" +
+                "\r\nwhere j1.\"Account\" = '"+cuenta+"'" +
+                /* "\r\nand j1.\"ProfitCode\" = "+uo+"" + */
+                "\r\ngroup by \r\nj0.\"Project\", \r\nj0.\"RefDate\"," +
+                "\r\nj0.\"TransId\",\r\nj1.\"Line_ID\",\r\nj0.\"Memo\"," +
+                "\r\nj1.\"Debit\",\r\nj1.\"Credit\",\r\nj0.\"LocTotal\"," +
+                "\r\nj1.\"Account\",\r\nj1.\"ProfitCode\"\r\norder " +
+                "by\r\nj0.\"RefDate\",\r\nj0.\"TransId\",\r\nj1.\"Line_ID\"";
+
+            var rawres = _context.Database.SqlQuery<ProjectJournal>(queryP).ToList();
+            var formData = rawres.Select(x => new
+            {
+                fecha = x.fecha.ToString("dd/MM/yyyy"),
+                x.trans_id,
+                x.line_id,
+                x.memo,
+                Debit = Decimal.ToDouble(x.Debit),
+                Credit = Decimal.ToDouble(x.Credit),
+                total = Decimal.ToDouble(x.total),
+                x.cuenta,
+                x.unidad_organizacional
+            });
+            return Ok(formData);
+        }
+
+        [HttpGet]
+        [Route("api/AccountInfo/{cuenta}")]
+        public IHttpActionResult AccountInfo(string cuenta)
+        {
+            var queryP =
+                "select oa.\"AcctName\" as \"nombre\",\r\noa.\"AcctCode\" as \"codigo\",\r\noa.\"FormatCode\" as \"cuenta\"\r\nfrom ucatolica.OACT oa\r\nwhere oa.\"AcctCode\" = '"+cuenta+"'";
+
+            var rawres = _context.Database.SqlQuery<ProjectJournal>(queryP).ToList();
+            var formData = rawres.Select(x => new
+            {
+                x.cuenta,
+                x.codigo,
+                x.nombre
+            });
+            return Ok(formData);
+        }
+
+        ///aqui se hacen las pruebas
+        [HttpGet] 
+        [Route("api/BudgetProject/{codigo_proy}/{fecha}/{regional}")]
+        public IHttpActionResult BudgetProject(string codigo_proy, string fecha, string regional)
+        {
+            //convertir precio a float o double y cantidad a int!!
+            var queryProduct = "SELECT \"AbsId\" FROM ucatolica.OBGS WHERE YEAR(\"FinancYear\")=YEAR('2019-01-20') and \"PrjCode\" is not null;\r\n";
+                /*
+                "CALL ucatolica.\"SP_PRS_RPTANUALACUMULADO_PROY\"" +
+                "('"+codigo_proy+"','"+fecha+"','"+regional+"')";
+                */
+            var rawresult = _SapContext.Database.SqlQuery<ProyPrueba>(queryProduct).ToList();
+            var formatedData = rawresult.Select(x => new
+            {
+                x.FORMATCODE,
+                x.ACCTCODE,
+                x.ACCTNAME,
+                x.DIM1,
+                x.DIM2,
+                x.TOTAL_CUENTA,
+                x.TOTAL_DIM,
+                x.SOLICITADO,
+                x.COMPROMETIDO,
+                x.EJECUTADO,
+                x.SUCURSAL,
+                x.PrjCode,
+                x.PrjName
+            });
+            return Ok(formatedData.ToList());
+        }
+    }
 
 }
 
