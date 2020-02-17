@@ -20,8 +20,6 @@ namespace AddonSolicitudesCompras.Logic
         //Install-Package System.DirectoryServices -Version 4.5.0
         //Install-Package System.DirectoryServices.AccountManagement -Version 4.5.0
 
-
-
         public string sDomain = "UCB.BO";
         public string Domain = "192.168.18.62";
         //public string Domain = "UCB.BO";
@@ -31,8 +29,6 @@ namespace AddonSolicitudesCompras.Logic
         {
             hanaval = new HanaValidator();
         }
-
-        
         public string getSamAcoutName(People person)
         {
 
@@ -106,7 +102,6 @@ namespace AddonSolicitudesCompras.Logic
             _context.SaveChanges();
             return SAN;
         }
-
         public bool memberOf(CustomUser user, string groupName)
         {
             using (PrincipalContext ouContex = new PrincipalContext(ContextType.Domain,
@@ -125,7 +120,6 @@ namespace AddonSolicitudesCompras.Logic
 
             return false;
         }
-
         public Principal findUser(People person)
         {
             Principal user;
@@ -271,7 +265,6 @@ namespace AddonSolicitudesCompras.Logic
             return false;
 
         }
-
         public List<string> getGroups()
         {
             List<string> res = new List<string>();
@@ -295,7 +288,5 @@ namespace AddonSolicitudesCompras.Logic
 
         }
         
-
-
     }
 }

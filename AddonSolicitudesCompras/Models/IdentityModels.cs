@@ -56,38 +56,4 @@ namespace AddonSolicitudesCompras.Models
         }
     }
 
-    public class SapContext : IdentityDbContext<ApplicationUser>
-    {
-        public DbSet<People> Person { get; set; }
-        public DbSet<Branches> Branch { get; set; }
-        public DbSet<AccessLogs> AccessLogses { get; set; }
-        public DbSet<Access> Accesses { get; set; }
-        public DbSet<Rol> Rols { get; set; }
-        public DbSet<RolhasAccess> RolshaAccesses { get; set; }
-        public DbSet<ProyPrueba> ProyPrueba { get; set; }
-
-
-
-        static SapContext()
-        {
-            Database.SetInitializer<SapContext>(null);
-        }
-
-        public SapContext()
-            : base("desarrollo", throwIfV1Schema: false)
-        {
-        }
-
-        public static SapContext Create()
-        {
-            return new SapContext();
-        }
-
-        protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.HasDefaultSchema("UCATOLICA");
-            // modelBuilder.Ignore<People>();
-        }
-    }
 }

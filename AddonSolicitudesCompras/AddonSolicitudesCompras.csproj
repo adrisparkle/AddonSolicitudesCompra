@@ -239,9 +239,11 @@
     <Compile Include="Models\People.cs" />
     <Compile Include="Models\GeneralRelations.cs" />
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\JournalReportHead.cs" />
     <Compile Include="Models\ProyPrueba.cs" />
     <Compile Include="Models\ProjectJournal.cs" />
     <Compile Include="Models\ProjectName.cs" />
+    <Compile Include="Models\VLIRFake.cs" />
     <Compile Include="Models\VLIRInfo.cs" />
     <Compile Include="Models\VLIR.cs" />
     <Compile Include="Models\ProjectInfo.cs" />
@@ -256,7 +258,6 @@
     <Compile Include="Models\PurchaseQuotation.cs" />
     <Compile Include="Models\PurchaseOrderDetail.cs" />
     <Compile Include="Models\PurchaseQuotationDetail.cs" />
-    <Compile Include="Models\Prueba.cs" />
     <Compile Include="Models\PurchaseRequestDetail.cs" />
     <Compile Include="Models\PurchaseSearch.cs" />
     <Compile Include="Models\PurchaseRequest.cs" />

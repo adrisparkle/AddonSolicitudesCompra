@@ -13,6 +13,7 @@ namespace AddonSolicitudesCompras.Models
             public string proyecto_nombre { get; set; }
             public string unidad_organizacional { get; set; }
             public string pei_po { get; set; }
+            public string regional { get; set; }
             public DateTime valido_hasta { get; set; }
             public DateTime valido_desde { get; set; }
 

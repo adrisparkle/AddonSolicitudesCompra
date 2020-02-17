@@ -15,13 +15,7 @@ namespace AddonSolicitudesCompras.Models.Auth
         public FiltroUser(int Id, ApplicationDbContext _context = null)
         {
             _context = _context == null ? new ApplicationDbContext() : _context;
-            FiltroUser userInDb = _context.Database.SqlQuery<FiltroUser>("select u.\"Id\",u.\"UserPrincipalName\", f.\"FullName\", p.\"UcbEmail\", p.\"PersonalEmail\", p.CUNI, p.\"Gender\", p.\"BirthDate\", u.\"PeopleId\"" +
-                                                                         " from admnalrrhh.\"User\" u " +
-                                                                         " inner join admnalrrhh.\"FullName\" f " +
-                                                                         "  on u.\"PeopleId\" = f.\"PeopleId\" " +
-                                                                         " inner join admnalrrhh.\"People\" p" +
-                                                                         "  on p.\"Id\" = f.\"PeopleId\"" +
-                                                                         " where u.\"Id\" = " + Id).FirstOrDefault();
+            FiltroUser userInDb = _context.Database.SqlQuery<FiltroUser>("select u.\"Id\",\r\nu.\"UserPrincipalName\", \r\np.\"UcbEmail\", \r\np.\"PersonalEmail\", \r\np.CUNI, \r\np.\"Gender\", \r\np.\"BirthDate\", \r\nu.\"PeopleId\",\r\nADMNALRRHH.clean_text( concat(coalesce(p.\"FirstSurName\",\r\n\t''),\r\n\t concat(' ',\r\n\t concat(case when p.\"UseSecondSurName\"=1 \r\n\t\t\t\tthen coalesce(p.\"SecondSurName\",\r\n\t'') \r\n\t\t\t\telse '' \r\n\t\t\t\tend,\r\n\t concat(' ',\r\n\t concat( case when p.\"UseMariedSurName\"=1 \r\n\t\t\t\t\t\tthen concat(coalesce(p.\"MariedSurName\",\r\n\t''),\r\n\t' ') \r\n\t\t\t\t\t\telse '' \r\n\t\t\t\t\t\tend,\r\n\t coalesce(p.\"Names\",\r\n\t'')) ) ) ) ) ) as \"FullName\" \r\nfrom admnalrrhh.\"User\" u\r\ninner join admnalrrhh.\"People\" p\r\non u.\"PeopleId\" = p.\"Id\"\r\nwhere u.\"Id\" = " + Id).FirstOrDefault();
             this.Id = userInDb.Id;
             this.UserPrincipalName = userInDb.UserPrincipalName;
             this.FullName = userInDb.FullName;

@@ -47,11 +47,53 @@ namespace AddonSolicitudesCompras.Controllers
             return Ok(formatedData);
         }
         [HttpGet]
+        [Route("api/PurchaseSearchDetail/{parameter}")]
+        public IHttpActionResult PurchaseSearchDetail(string parameter)
+        {
+            parameter = parameter.ToUpper();
+            var query = "select " +
+                        "oprq.\"DocNum\" as \"numero_documento\"," +
+                        "\r\noprq.\"ReqName\" as \"solicitante\"," +
+                        "\r\noprq.\"DocDate\" as \"fecha_contabilizacion\"," +
+                        "\r\noprq.\"BPLName\" as \"regional\"," +
+                        "\r\noprq.\"U_UOrganiza\" as \"unidad_organizacional\"," +
+                        "\r\noprq.\"DocEntry\" as \"id\"" +
+                        " from ucatolica.\"OPRQ\" oprq" +
+                        "\r\nwhere TO_VARCHAR(oprq.\"DocNum\") like '%"+parameter+"%'" +
+                        "\r\nor TO_VARCHAR(oprq.\"ReqName\") like '%" + parameter + "%'" +
+                        "\r\nor TO_VARCHAR(oprq.\"DocDate\") like '%" + parameter + "%'" +
+                        "\r\nor TO_VARCHAR(oprq.\"U_UOrganiza\") like '%" + parameter + "%'" +
+                        "\r\nor TO_VARCHAR(oprq.\"BPLName\") like '%" + parameter + "%'";
+            var rawresult = _context.Database.SqlQuery<PurchaseSearch>(query).ToList();
+            var formatedData = rawresult.Select(x => new
+            {
+                x.id,
+                x.solicitante,
+                fecha_contabilizacion = x.fecha_contabilizacion.ToString("dd/MM/yyyy"),
+                x.regional,
+                x.unidad_organizacional,
+                x.numero_documento
+            });
+
+            return Ok(formatedData);
+        }
+        [HttpGet]
         [Route("api/PurchaseRequest/{id}")]
         public IHttpActionResult PurchaseRequest(int id)
         {
             //convertir precio a float o double y cantidad a int!!
-            var queryProduct = "select op.\"DocNum\" as \"id\", \r\nop.\"Requester\" as \"codigo_solicitante\", \r\nop.\"ReqName\" as \"solicitante\", \r\nf.\"SeriesName\" as \"serie\", \r\nop.\"BPLName\" as \"regional\",\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\", \r\nop.\"DocDate\" as \"fecha_contabilizacion\", \r\nop.\"DocDueDate\" as \"fecha_valida\", \r\nop.\"TaxDate\" as \"fecha_documento\", \r\nop.\"ReqDate\" as \"fecha_requerida\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\")\tas \t\"espicificaciones_tecnicas\",\r\nTO_VARCHAR(op.\"U_DocInfProyecto\")\tas \t\"informe_proyecto\",\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\")\tas \t\"informe_circunstanciado\",\r\nTO_VARCHAR(op.\"U_APagoDirecto\")\tas \t\"pago_directo\",\r\nTO_VARCHAR(op.\"U_Propuesta\")\tas \t\"propuesta\",\r\nTO_VARCHAR(op.\"U_CuadroComparativo\")\tas \t\"cuadro_comparativo\",\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\")\tas \t\"acta_evaluacion\",\r\nTO_VARCHAR(op.\"U_InformeProceso\")\tas \t\"informe_proceso\",\r\nTO_VARCHAR(op.\"U_InformeLegal\")\tas \t\"informe_legal\",\r\nTO_VARCHAR(op.\"U_Pliego\")\tas \t\"pliego\",\r\nTO_VARCHAR(op.\"U_Contrato\")\tas \t\"contrato\",\r\ncase \r\nwhen op.\"CANCELED\"='Y' THEN 'Cancelado'\r\nwhen op.\"CANCELED\"='N' THEN 'Aprobado'\r\nend as \"estado\"\r\nfrom \"UCATOLICA\".\"OPRQ\" op\r\nleft join ucatolica.\"NNM1\" \r\nf on op.\"Series\" = f.\"Series\"\r\nwhere op.\"DocEntry\" ="
+            var queryProduct = "select op.\"DocNum\" as \"id\"," +
+                               " \r\nop.\"Requester\" as \"codigo_solicitante\", " +
+                               "\r\nop.\"ReqName\" as \"solicitante\", " +
+                               "\r\nf.\"SeriesName\" as \"serie\", " +
+                               "\r\nop.\"BPLName\" as \"regional\"," +
+                               "\r\nop.\"U_UOrganiza\" as \"unidad_organizacional\"," +
+                               "\r\nop.\"DocDate\" as \"fecha_contabilizacion\"," +
+                               "\r\nop.\"DocDueDate\" as \"fecha_valida\"," +
+                               "\r\nop.\"TaxDate\" as \"fecha_documento\"," +
+                               "\r\nop.\"ReqDate\" as \"fecha_requerida\"," +
+                               "\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\")\tas \t\"espicificaciones_tecnicas\"," +
+                               "\r\nTO_VARCHAR(op.\"U_DocInfProyecto\")\tas \t\"informe_proyecto\",\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\")\tas \t\"informe_circunstanciado\",\r\nTO_VARCHAR(op.\"U_APagoDirecto\")\tas \t\"pago_directo\",\r\nTO_VARCHAR(op.\"U_Propuesta\")\tas \t\"propuesta\",\r\nTO_VARCHAR(op.\"U_CuadroComparativo\")\tas \t\"cuadro_comparativo\",\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\")\tas \t\"acta_evaluacion\",\r\nTO_VARCHAR(op.\"U_InformeProceso\")\tas \t\"informe_proceso\",\r\nTO_VARCHAR(op.\"U_InformeLegal\")\tas \t\"informe_legal\",\r\nTO_VARCHAR(op.\"U_Pliego\")\tas \t\"pliego\",\r\nTO_VARCHAR(op.\"U_Contrato\")\tas \t\"contrato\",\r\ncase \r\nwhen op.\"CANCELED\"='Y' THEN 'Cancelado'\r\nwhen op.\"CANCELED\"='N' THEN 'Aprobado'\r\nend as \"estado\"\r\nfrom \"UCATOLICA\".\"OPRQ\" op\r\nleft join ucatolica.\"NNM1\" \r\nf on op.\"Series\" = f.\"Series\"\r\nwhere op.\"DocEntry\" ="
                                + id +
                                " group by op.\"DocNum\", \r\nop.\"Requester\", op.\"ReqName\", \r\nf.\"SeriesName\", op.\"BPLName\",\r\nop.\"U_UOrganiza\", \r\nop.\"DocDate\", \r\nop.\"DocDueDate\", op.\"TaxDate\",\r\nop.\"ReqDate\",\r\nTO_VARCHAR(op.\"U_DocEspTecnicas\"),\r\nTO_VARCHAR(op.\"U_DocInfProyecto\"),\r\nTO_VARCHAR(op.\"U_InfCircunstanciado\"),\r\nTO_VARCHAR(op.\"U_APagoDirecto\"),\r\nTO_VARCHAR(op.\"U_Propuesta\"),\r\nTO_VARCHAR(op.\"U_CuadroComparativo\"),\r\nTO_VARCHAR(op.\"U_ActaEvaluacion\"),\r\nTO_VARCHAR(op.\"U_InformeProceso\"),\r\nTO_VARCHAR(op.\"U_InformeLegal\"),\r\nTO_VARCHAR(op.\"U_Pliego\"),\r\nTO_VARCHAR(op.\"U_Contrato\"),\r\nop.\"CANCELED\"";
             var rawresult = _context.Database.SqlQuery<PurchaseRequest>(queryProduct).ToList();

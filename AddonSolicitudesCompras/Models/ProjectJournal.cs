@@ -10,17 +10,13 @@ namespace AddonSolicitudesCompras.Models
             [Key]
             [DatabaseGenerated(DatabaseGeneratedOption.None)]
             public DateTime fecha { get; set; }
-            public int trans_id { get; set; }
-            public int line_id { get; set; }
-            public string memo { get; set; }
-            public decimal Debit { get; set; }
-            public decimal Credit { get; set; }
-            public decimal total { get; set; }
+            public int numero_transaccion { get; set; }
+            public int numero_linea { get; set; }
+            public string glosa { get; set; }
+            public decimal monto { get; set; }
             public string cuenta { get; set; }
-            public int unidad_organizacional { get; set; }
-            public string nombre { get; set; }
-            public string codigo { get; set; }
-
+            public int uo { get; set; }
+            public string proyecto { get; set; }
         }
     
 }

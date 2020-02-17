@@ -12,15 +12,20 @@ namespace AddonSolicitudesCompras.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string sucursal { get; set; }
+        public string codigo_proyecto { get; set; }
         public string cuenta { get; set; }
+        public string codigo_cuenta { get; set; }
+        public string nombre_cuenta { get; set; }
         public DateTime fecha { get; set; }
         public string numero_comprobante { get; set; }
         public string numero_transaccion { get; set; }
-        public string sucursal { get; set; }
-        public string descripcion { get; set; }
+        public string linea_transaccion { get; set; }
         public string referencia { get; set; }
-        public decimal monto { get; set; }
-        public string codigo_proyecto { get; set; }
+        public string descripcion { get; set; }
+        public decimal debe { get; set; }
+        public decimal haber { get; set; }
+        public decimal monto_total { get; set; }
        
     }
 
