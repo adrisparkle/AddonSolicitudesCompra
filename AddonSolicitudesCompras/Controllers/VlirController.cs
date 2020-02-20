@@ -113,7 +113,7 @@ namespace AddonSolicitudesCompras.Controllers
             {
                 if (regional != "Todos")
                 {
-                    queryProduct = "select d.\"U_Sucursal\" as \"sucursal\"," +
+                    /*queryProduct = "select d.\"U_Sucursal\" as \"sucursal\"," +
                                "\r\nd.\"PrjCode\" as \"codigo_proyecto\" ," +
                                "\r\nc.\"FormatCode\" as \"cuenta\"," +
                                "\r\nc.\"AcctCode\" as \"codigo_cuenta\"," +
@@ -147,7 +147,45 @@ namespace AddonSolicitudesCompras.Controllers
                                "\r\nb.\"LineMemo\",b.\"Debit\",b.\"Credit\"," +
                                "\r\na.\"LocTotal\"order by a.\"RefDate\"," +
                                "\r\na.\"Number\",b.\"TransId\"," +
-                               "\r\nb.\"Line_ID\"";
+                               "\r\nb.\"Line_ID\"";*/
+                    queryProduct = "select d.\"U_Sucursal\" as \"sucursal\"," +
+                                   "\r\nd.\"PrjCode\" as \"codigo_proyecto\" ," +
+                                   "\r\nc.\"FormatCode\" as \"cuenta\"," +
+                                   "\r\nc.\"AcctCode\" as \"codigo_cuenta\"," +
+                                   "\r\nc.\"AcctName\" as \"nombre_cuenta\"," +
+                                   "\r\na.\"RefDate\" as \"fecha\"," +
+                                   "\r\na.\"Number\" as \"numero_comprobante\"," +
+                                   "\r\nb.\"TransId\" as \"numero_transaccion\"," +
+                                   "\r\nb.\"Line_ID\" as \"linea_transaccion\"," +
+                                   "\r\nconcat(b.\"Ref1\"," +
+                                   "concat(' ', b.\"Ref2\")) as \"referencia\"," +
+                                   "\r\nb.\"LineMemo\" as \"descripcion\"," +
+                                   "\r\nb.\"Debit\" as \"debe\"," +
+                                   "\r\nb.\"Credit\" as \"haber\"," +
+                                   "\r\n(b.\"Debit\"-b.\"Credit\") as \"monto_total\"" +
+                                   "\r\nfrom ucatolica.ojdt a" +
+                                   "\r\ninner join ucatolica.jdt1 b" +
+                                   "\r\non a.\"TransId\" = b.\"TransId\"" +
+                                   "\r\ninner join   ucatolica.oact c\r\non b.\"Account\" = " +
+                                   "c.\"AcctCode\"\r\nleft join ucatolica.oprj d\r\non " +
+                                   "b.\"Project\" = d.\"PrjCode\"\r\nwhere a.\"RefDate\"" +
+                                   " between '" + initDate + "' and '" + endDate + "'" +
+                                   "\r\nand d.\"U_Sucursal\" = '" + regional + "'" +
+                                   "\r\nand (c.\"GroupMask\" " +
+                                   "like '4%'  \r\nor c.\"GroupMask\" like '5%')\r\nand d.\"PrjCode\"" +
+                                   " in ('L4655',\r\n'L4654',\r\n'L4653',\r\n'L4652',\r\n'L4651'," +
+                                   "\r\n'L4650',\r\n'C4209',\r\n'C4210',\r\n'C4211',\r\n'C4212'," +
+                                   "\r\n'C4213',\r\n'C4214',\r\n'S10003',\r\n'S10004',\r\n'S10005'," +
+                                   "\r\n'S10006',\r\n'S10008',\r\n'S10007',\r\n'T2753',\r\n'T2754'," +
+                                   "\r\n'T2755',\r\n'T2756',\r\n'T2757',\r\n'U4769',\r\n'U4772'," +
+                                   "\r\n'U4760',\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770')" +
+                                   "\r\ngroup by d.\"U_Sucursal\",\r\nd.\"PrjCode\",c.\"FormatCode\"," +
+                                   "\r\nc.\"AcctCode\",c.\"AcctName\",\r\na.\"RefDate\",a.\"Number\"," +
+                                   "\r\nb.\"TransId\",b.\"Line_ID\",\r\nconcat(b.\"Ref1\"," +
+                                   "concat(' ', b.\"Ref2\")),\r\nb.\"LineMemo\",b.\"Debit\"," +
+                                   "b.\"Credit\",\r\na.\"LocTotal\"\r\norder by \r\nd.\"PrjCode\"," +
+                                   "\r\na.\"RefDate\",\r\na.\"Number\",b.\"TransId\"," +
+                                   "\r\nb.\"Line_ID\"";
                 }
                 else
                 {

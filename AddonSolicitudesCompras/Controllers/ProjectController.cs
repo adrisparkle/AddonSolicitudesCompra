@@ -28,22 +28,12 @@ namespace AddonSolicitudesCompras.Controllers
             FiltroUser us = new FiltroUser(user);
             //convertir precio a float o double y cantidad a int!!
             var queryProduct =
-                "select\r\np.\"PrjCode\" as \"codigo_proyecto\"," +
+                "select p.\"PrjCode\" as \"codigo_proyecto\"," +
                 "\r\np.\"PrjName\" as \"nombre_proyecto\"," +
                 "\r\np.\"U_Sucursal\" as \"regional\"," +
                 "\r\np.\"U_PEI_PO\" as \"pei_po\"," +
                 "\r\np.\"U_UORGANIZA\" as \"unidad_organizacional\"," +
-                "\r\np.\"ValidTo\" as \"valido_hasta\"," +
-                "\r\np.\"ValidFrom\" as \"valido_desde\"" +
-                "\r\nfrom " + dbName + ".oprj p" +
-                "\r\nwhere p.\"Active\" = 'Y'" +
-                "\r\nand p.\"ValidTo\" >= current_date" +
-                "\r\n group by\r\np.\"PrjCode\"," +
-                "\r\np.\"PrjName\",\r\np.\"U_Sucursal\"," +
-                "\r\np.\"U_PEI_PO\",\r\np.\"U_UORGANIZA\"," +
-                "\r\np.\"ValidTo\",\r\np.\"ValidFrom\"" +
-                "\r\norder by \r\np.\"PrjCode\"," +
-                "\r\np.\"PrjName\"";
+                "\r\np.\"ValidTo\" as \"valido_hasta\",\r\np.\"ValidFrom\" as \"valido_desde\"\r\nfrom  dbName + \".oprj p\r\nwhere p.\"Active\" = 'Y'\r\nand p.\"ValidTo\" >= current_date\r\n group by p.\"PrjCode\",\r\np.\"PrjName\", p.\"U_Sucursal\",\r\np.\"U_PEI_PO\", p.\"U_UORGANIZA\",\r\np.\"ValidTo\", p.\"ValidFrom\"\r\norder by  p.\"PrjCode\",\r\np.\"PrjName\"";
 
             var rawresult = _context.Database.SqlQuery<Project>(queryProduct).ToList();
             var AD = new ADClass();
@@ -122,31 +112,33 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult ProjectInfoDetail(string account, string project)
         {
             var queryP =
-                "select\r\nj1.\"RefDate\" as \"fecha\"," +
-                "\r\nj0.\"TransId\" as \"numero_transaccion\", " +
-                "\r\nj1.\"Line_ID\" as \"numero_linea\", " +
-                "\r\nj0.\"Memo\" as \"glosa\", " +
-                "\r\nj1.\"Debit\"-j1.\"Credit\" as \"monto\", " +
-                "\r\nj1.\"Account\" as \"cuenta\"," +
-                "\r\nj1.\"ProfitCode\" as \"uo\"," +
-                "\r\nj1.\"Project\" as \"proyecto\"" +
-                "\r\nfrom ucatolica.\"OJDT\" j0\r\n" +
-                "inner join ucatolica.\"JDT1\" j1" +
-                "\r\non j1.\"TransId\" = j0.\"TransId\"" +
-                "\r\nwhere j1.\"Account\" = '"+account+
-                "' and j1.\"Project\" = '"+project+"' " +
-                "group by  \r\nj1.\"RefDate\"," +
-                "\r\nj0.\"TransId\"," +
-                "\r\nj1.\"Line_ID\"," +
-                "\r\nj0.\"Memo\"," +
-                "\r\nj1.\"Debit\" - j1.\"Credit\"," +
-                "\r\nj1.\"Account\"," +
-                "\r\nj1.\"ProfitCode\"," +
-                "\r\nj1.\"Project\"" +
-                "\r\norder by" +
-                "\r\nj1.\"RefDate\"," +
-                "\r\nj0.\"TransId\"," +
-                "\r\nj1.\"Line_ID\"";
+                "select  j1.\"RefDate\" as \"fecha\", " +
+                "\r\n j0.\"TransId\" as \"numero_transaccion\"," +
+                "\r\n j1.\"Line_ID\" as \"numero_linea\",  " +
+                "\r\n j0.\"Memo\" as \"glosa\",  " +
+                "\r\n j1.\"Debit\"-j1.\"Credit\" as \"monto\"" +
+                "\r\n from ucatolica.\"OJDT\" j0   " +
+                "\r\n inner join ucatolica.\"JDT1\" j1 " +
+                "\r\n on j1.\"TransId\" = j0.\"TransId\" " +
+                "\r\n inner join ucatolica.\"OACT\" oa" +
+                "\r\n on oa.\"AcctCode\" = j1.\"Account\"" +
+                "\r\n where j1.\"Account\" = '"+account+"' and j1.\"Project\" = '"+project+"'" +
+                "\r\n group by j1.\"RefDate\", " +
+                "\r\n j0.\"TransId\", " +
+                "\r\n j1.\"Line_ID\", \r\n j0.\"Memo\", " +
+                "\r\n j1.\"Debit\" - j1.\"Credit\", " +
+                "\r\noa.\"FormatCode\", \r\n j1.\"ProfitCode\", " +
+                "\r\n j1.\"Project\" \r\n order by \r\n j1.\"RefDate\", " +
+                "\r\n j0.\"TransId\", \r\n j1.\"Line_ID\"";
+            var querytot =
+                "select  '' as \"fecha\", \r\n'' as \"numero_transaccion\", " +
+                " \r\n'' as \"numero_linea\",  \r\n'Total' as \"glosa\",  " +
+                "\r\n sum(j1.\"Debit\"-j1.\"Credit\") as \"monto\" " +
+                "\r\n from ucatolica.\"OJDT\" j0\r\n inner join ucatolica.\"JDT1\" j1 " +
+                "\r\n on j1.\"TransId\" = j0.\"TransId\" \r\n inner join ucatolica.\"OACT\" oa" +
+                "\r\n on oa.\"AcctCode\" = j1.\"Account\"\r\n where j1.\"Account\" = '"+account+"'" +
+                " and j1.\"Project\" = '"+project+"'  ";
+
 
             var rawres = _context.Database.SqlQuery<ProjectJournal>(queryP).ToList();
             var formData = rawres.Select(x => new
@@ -155,12 +147,18 @@ namespace AddonSolicitudesCompras.Controllers
                 x.numero_transaccion,
                 x.numero_linea,
                 x.glosa,
-                x.monto,
-                x.cuenta,
-                x.uo,
-                x.proyecto
+                x.monto
             });
-            return Ok(formData);
+           var totalQuery = _context.Database.SqlQuery<ProjectJournalFake>(querytot).ToList();
+            var totalData = totalQuery.Select(x => new
+            {
+                x.fecha,
+                x.numero_transaccion,
+                x.numero_linea,
+                x.glosa,
+                x.monto
+            });
+            return Ok(formData.Concat(totalData));
         }
 
         [HttpGet]
@@ -168,30 +166,39 @@ namespace AddonSolicitudesCompras.Controllers
         public IHttpActionResult JournalReportHead(string account, string project)
         {
             var queryP =
-                "select \r\nd.\"U_Sucursal\" as \"sucursal\"," +
-                "\r\nd.\"PrjCode\" as \"codigo_proyecto\" ," +
-                "\r\nd.\"PrjName\" as \"nombre_proyecto\"," +
-                "\r\nc.\"FormatCode\" as \"cuenta\"," +
-                "\r\nc.\"AcctCode\" as \"codigo_cuenta\"," +
-                "\r\nc.\"AcctName\" as \"nombre_cuenta\"," +
-                "\r\nsum (b.\"Debit\"-b.\"Credit\") as \"monto\"" +
-                "\r\nfrom ucatolica.ojdt a\r\ninner join   ucatolica.jdt1 b\r\non a.\"TransId\" = b.\"TransId\"\r\ninner join   ucatolica.oact c\r\non b.\"Account\" = c.\"AcctCode\"\r\nleft join   ucatolica.oprj d  \r\non b.\"Project\" = d.\"PrjCode\"" +
-                "\r\nwhere b.\"Project\" = '" +project+
-                "'\r\nand c.\"AcctCode\" = '"+account+"'" +
-                "\r\ngroup by\r\nd.\"U_Sucursal\",\r\nd.\"PrjCode\",\r\nd.\"PrjName\",\r\nc.\"FormatCode\",\r\nc.\"AcctCode\",\r\nc.\"AcctName\"";
+                "select  \r\nmin(j1.\"RefDate\") as  \"fechaInicio\", " +
+                "\r\nmax(j1.\"RefDate\") as  \"fechaFin\"," +
+                "\r\noa.\"FormatCode\" as  \"cuenta\"," +
+                "\r\noa.\"AcctName\" as \"nombre_cuenta\"," +
+                "\r\n j1.\"ProfitCode\" as  \"uo\"," +
+                "\r\n j1.\"Project\" as  \"codigo_proyecto\"," +
+                "\r\n op.\"PrjName\" as \"nombre_proyecto\"" +
+                "\r\n from ucatolica.\"OJDT\" j0" +
+                "\r\n inner join ucatolica.\"JDT1\" j1 " +
+                "\r\n on j1.\"TransId\" = j0. \"TransId\" " +
+                "\r\n inner join ucatolica.\"OACT\" oa" +
+                "\r\n on oa.\"AcctCode\" = j1.\"Account\"" +
+                "\r\n inner join ucatolica.\"OPRJ\" op" +
+                "\r\n on op.\"PrjCode\" = j1.\"Project\"" +
+                "\r\n where j1.\"Account\" = '"+account+"' " +
+                "and j1. \"Project\" = '"+project+"'  " +
+                "\r\ngroup by \r\noa.\"FormatCode\"," +
+                "\r\noa.\"AcctName\", \r\n j1.\"ProfitCode\", " +
+                "\r\n j1.\"Project\",\r\n op.\"PrjName\"";
 
             var rawres = _context.Database.SqlQuery<JournalReportHead>(queryP).ToList();
             var formData = rawres.Select(x => new
             {
-                x.sucursal,
                 x.codigo_proyecto,
                 x.nombre_proyecto,
                 x.cuenta,
-                x.codigo_cuenta,
+                x.uo,
                 x.nombre_cuenta,
-                x.monto
+                fechaInicio = x.fechaInicio.ToString("dd/MM/yyyy"),
+                fechaFin = x.fechaFin.ToString("dd/MM/yyyy"),
             });
             return Ok(formData);
         }
+
     }
 }

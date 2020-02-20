@@ -240,6 +240,7 @@
     <Compile Include="Models\GeneralRelations.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\JournalReportHead.cs" />
+    <Compile Include="Models\ProjectJournalFake.cs" />
     <Compile Include="Models\ProyPrueba.cs" />
     <Compile Include="Models\ProjectJournal.cs" />
     <Compile Include="Models\ProjectName.cs" />

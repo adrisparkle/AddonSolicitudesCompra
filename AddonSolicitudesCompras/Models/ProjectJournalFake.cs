@@ -5,11 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AddonSolicitudesCompras.Models
 {
         [CustomSchema("ProjectJournal")]
-    public class ProjectJournal
+    public class ProjectJournalFake
         {
             [Key]
             [DatabaseGenerated(DatabaseGeneratedOption.None)]
-            public DateTime fecha { get; set; }
+            public string fecha { get; set; }
             public string numero_transaccion { get; set; }
             public string numero_linea { get; set; }
             public string glosa { get; set; }
