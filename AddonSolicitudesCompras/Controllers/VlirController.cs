@@ -33,7 +33,7 @@ namespace AddonSolicitudesCompras.Controllers
                 "\r\nfrom "+dbName+".oprj p " +
                 "\r\nwhere p.\"Active\" = 'Y' " +
                 "\r\nand p.\"PrjCode\" in " +
-                "('L4655',\r\n'L4654',\r\n'L4653',\r\n'L4652',\r\n'L4651',\r\n'L4650',\r\n'C4209',\r\n'C4210',\r\n'C4211',\r\n'C4212',\r\n'C4213',\r\n'C4214',\r\n'S10003',\r\n'S10004',\r\n'S10005',\r\n'S10006',\r\n'S10008',\r\n'S10007',\r\n'T2753',\r\n'T2754',\r\n'T2755',\r\n'T2756',\r\n'T2757',\r\n'U4769',\r\n'U4772',\r\n'U4760',\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770'\r\n)" +
+                "('L4655',\r\n'L4654',\r\n'L4653',\r\n'L4652',\r\n'L4651',\r\n'L4650',\r\n'C4209',\r\n'C4210',\r\n'C4211',\r\n'C4212',\r\n'C4213',\r\n'C4214',\r\n'S10003',\r\n'S10004',\r\n'S10005',\r\n'S10006',\r\n'S10008',\r\n'S10007',\r\n'T2753',\r\n'T2754',\r\n'T2755',\r\n'T2756',\r\n'T2757',\r\n'U4769',\r\n'U4772',\r\n'U4760',\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770'\r\n, 'E3113')" +
                 "\r\ngroup by " +
                 "p.\"PrjCode\", " +
                 "\r\np.\"PrjName\"," +
@@ -178,7 +178,7 @@ namespace AddonSolicitudesCompras.Controllers
                                    "\r\n'C4213',\r\n'C4214',\r\n'S10003',\r\n'S10004',\r\n'S10005'," +
                                    "\r\n'S10006',\r\n'S10008',\r\n'S10007',\r\n'T2753',\r\n'T2754'," +
                                    "\r\n'T2755',\r\n'T2756',\r\n'T2757',\r\n'U4769',\r\n'U4772'," +
-                                   "\r\n'U4760',\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770')" +
+                                   "\r\n'U4760',\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770', 'E3113')" +
                                    "\r\ngroup by d.\"U_Sucursal\",\r\nd.\"PrjCode\",c.\"FormatCode\"," +
                                    "\r\nc.\"AcctCode\",c.\"AcctName\",\r\na.\"RefDate\",a.\"Number\"," +
                                    "\r\nb.\"TransId\",b.\"Line_ID\",\r\nconcat(b.\"Ref1\"," +
@@ -217,7 +217,7 @@ namespace AddonSolicitudesCompras.Controllers
                                    "\r\n'C4213',\r\n'C4214',\r\n'S10003',\r\n'S10004',\r\n'S10005'," +
                                    "\r\n'S10006',\r\n'S10008',\r\n'S10007',\r\n'T2753',\r\n'T2754'," +
                                    "\r\n'T2755',\r\n'T2756',\r\n'T2757',\r\n'U4769',\r\n'U4772'," +
-                                   "\r\n'U4760',\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770')" +
+                                   "\r\n'U4760',\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770', 'E3113')" +
                                    "\r\ngroup by d.\"U_Sucursal\",\r\nd.\"PrjCode\",c.\"FormatCode\"," +
                                    "\r\nc.\"AcctCode\",c.\"AcctName\",\r\na.\"RefDate\",a.\"Number\"," +
                                    "\r\nb.\"TransId\",b.\"Line_ID\",\r\nconcat(b.\"Ref1\"," +
@@ -264,7 +264,7 @@ namespace AddonSolicitudesCompras.Controllers
                         "\r\n'S10004',\r\n'S10005',\r\n'S10006',\r\n'S10008'," +
                         "\r\n'S10007',\r\n'T2753',\r\n'T2754',\r\n'T2755',\r\n'T2756'," +
                         "\r\n'T2757',\r\n'U4769',\r\n'U4772',\r\n'U4760',\r\n'U4761'," +
-                        "\r\n'U4762',\r\n'U4771',\r\n'U4770')" +
+                        "\r\n'U4762',\r\n'U4771',\r\n'U4770', 'E3113')" +
                         "\r\n group by \"U_Sucursal\"\r\n \r\n";
             var rawresult = _context.Database.SqlQuery<VLIR>(query).ToList();
             var formatedData = rawresult.Select(x => new
@@ -296,7 +296,7 @@ namespace AddonSolicitudesCompras.Controllers
                         "\r\n'S10005',\r\n'S10006',\r\n'S10008',\r\n'S10007'," +
                         "\r\n'T2753',\r\n'T2754',\r\n'T2755',\r\n'T2756'," +
                         "\r\n'T2757',\r\n'U4769',\r\n'U4772',\r\n'U4760'," +
-                        "\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770')" +
+                        "\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770' , 'E3113')" +
                         "\r\nand p.\"U_Sucursal\" = '" + id + "'" +
                         "\r\ngroup by " +
                         "p.\"PrjCode\", " +
@@ -328,7 +328,7 @@ namespace AddonSolicitudesCompras.Controllers
                         "\r\n'S10005',\r\n'S10006',\r\n'S10008',\r\n'S10007'," +
                         "\r\n'T2753',\r\n'T2754',\r\n'T2755',\r\n'T2756'," +
                         "\r\n'T2757',\r\n'U4769',\r\n'U4772',\r\n'U4760'," +
-                        "\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770')" +
+                        "\r\n'U4761',\r\n'U4762',\r\n'U4771',\r\n'U4770', 'E3113')" +
                         "\r\ngroup by " +
                         "p.\"PrjCode\", " +
                         "\r\np.\"PrjName\"," +
