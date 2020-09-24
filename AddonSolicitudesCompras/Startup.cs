@@ -16,7 +16,7 @@ namespace AddonSolicitudesCompras
     {
         public void Configuration(IAppBuilder app)
         {
-            bool debugmode = true;
+            bool debugmode = false;
             app.Use(async (environment, next) =>
             {
                 AccessLogs log = null;
