@@ -33,34 +33,112 @@ namespace AddonSolicitudesCompras.Controllers
         // POST: /api/auth/gettoken/
         [HttpPost]
         [Route("api/auth/GetToken")]
-        public IHttpActionResult GetToken([FromBody]JObject credentials)
+        public IHttpActionResult GetToken([FromBody] JObject credentials)
         {
             if (credentials["username"] == null || credentials["password"] == null)
                 return BadRequest();
 
             string username = credentials["username"].ToString().ToUpper();
             string password = credentials["password"].ToString();
+            string system = credentials["system"].ToString();
             CustomUser user = _context.CustomUsers.FirstOrDefault(u => u.UserPrincipalName == username);
             if (!activeDirectory.ActiveDirectoryAuthenticate(username, password))
                 return Unauthorized();
-            user.Token = validator.getToken(user);
-            user.TokenCreatedAt = DateTime.Now;
-            user.RefreshToken = validator.getRefreshToken(user);
-            user.RefreshTokenCreatedAt = DateTime.Now;
-           _context.SaveChanges();
-           HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Headers.Add("Id", user.Id.ToString());
-            response.Headers.Add("Token", user.Token);
-            response.Headers.Add("RefreshToken", user.RefreshToken);
-            response.Headers.Add("name", user.UserPrincipalName);
-            dynamic respose = new JObject();
-            respose.Id = user.Id;
-            respose.Token = user.Token;
-            respose.RefreshToken = user.RefreshToken;
-            respose.name = user.UserPrincipalName;
-            respose.ExpiresIn = validateauth.tokenLife;
-            respose.RefreshExpiresIn = validateauth.refeshtokenLife;
-            return Ok(respose);
+            if (system == "COMPRAS")
+            {
+                if (activeDirectory.memberOf(user, "addon.procesoscompras"))
+                {
+
+                    user.Token = validator.getToken(user);
+                    user.TokenCreatedAt = DateTime.Now;
+                    user.RefreshToken = validator.getRefreshToken(user);
+                    user.RefreshTokenCreatedAt = DateTime.Now;
+                    _context.SaveChanges();
+                    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response.Headers.Add("Id", user.Id.ToString());
+                    response.Headers.Add("Token", user.Token);
+                    response.Headers.Add("RefreshToken", user.RefreshToken);
+                    response.Headers.Add("name", user.UserPrincipalName);
+                    dynamic respose = new JObject();
+                    respose.Id = user.Id;
+                    respose.Token = user.Token;
+                    respose.RefreshToken = user.RefreshToken;
+                    respose.name = user.UserPrincipalName;
+                    respose.ExpiresIn = validateauth.tokenLife;
+                    respose.RefreshExpiresIn = validateauth.refeshtokenLife;
+                    return Ok(respose);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            else
+            {
+                if (system == "VLIR")
+                {
+                    if (activeDirectory.memberOf(user, "addon.vlir"))
+                    {
+
+                        user.Token = validator.getToken(user);
+                        user.TokenCreatedAt = DateTime.Now;
+                        user.RefreshToken = validator.getRefreshToken(user);
+                        user.RefreshTokenCreatedAt = DateTime.Now;
+                        _context.SaveChanges();
+                        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                        response.Headers.Add("Id", user.Id.ToString());
+                        response.Headers.Add("Token", user.Token);
+                        response.Headers.Add("RefreshToken", user.RefreshToken);
+                        response.Headers.Add("name", user.UserPrincipalName);
+                        dynamic respose = new JObject();
+                        respose.Id = user.Id;
+                        respose.Token = user.Token;
+                        respose.RefreshToken = user.RefreshToken;
+                        respose.name = user.UserPrincipalName;
+                        respose.ExpiresIn = validateauth.tokenLife;
+                        respose.RefreshExpiresIn = validateauth.refeshtokenLife;
+                        return Ok(respose);
+                    }
+                    else
+                    {
+                        return Unauthorized();
+                    }
+                }
+                else
+                {
+                    if (system == "PRESUPUESTO")
+                    {
+                        if (activeDirectory.memberOf(user, "addon.presup"))
+                        {
+
+                            user.Token = validator.getToken(user);
+                            user.TokenCreatedAt = DateTime.Now;
+                            user.RefreshToken = validator.getRefreshToken(user);
+                            user.RefreshTokenCreatedAt = DateTime.Now;
+                            _context.SaveChanges();
+                            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                            response.Headers.Add("Id", user.Id.ToString());
+                            response.Headers.Add("Token", user.Token);
+                            response.Headers.Add("RefreshToken", user.RefreshToken);
+                            response.Headers.Add("name", user.UserPrincipalName);
+                            dynamic respose = new JObject();
+                            respose.Id = user.Id;
+                            respose.Token = user.Token;
+                            respose.RefreshToken = user.RefreshToken;
+                            respose.name = user.UserPrincipalName;
+                            respose.ExpiresIn = validateauth.tokenLife;
+                            respose.RefreshExpiresIn = validateauth.refeshtokenLife;
+                            return Ok(respose);
+                        }
+                        else
+                        {
+                            return Unauthorized();
+                        }
+                    }
+                }
+            }
+
+            return Unauthorized();
         }
 
         // POST: /api/auth/RefreshToken/

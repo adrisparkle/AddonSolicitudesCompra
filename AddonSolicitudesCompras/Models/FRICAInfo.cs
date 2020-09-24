@@ -7,24 +7,24 @@ using System.Web;
 
 namespace AddonSolicitudesCompras.Models
 {
-    [CustomSchema("VLIRInfo")]
-    public class VLIRInfo
+    [CustomSchema("FRICAInfo")]
+    public class FRICAInfo
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string regional { get; set; }
+        public string sucursal { get; set; }
         public string codigo_proyecto { get; set; }
         public string cuenta { get; set; }
         public string codigo_cuenta { get; set; }
         public string nombre_cuenta { get; set; }
-        public DateTime fecha_comprobante { get; set; }
+        public DateTime fecha { get; set; }
         public string numero_comprobante { get; set; }
         public string numero_transaccion { get; set; }
         public string linea_transaccion { get; set; }
         public string referencia { get; set; }
-        public string glosa { get; set; }
-        public decimal Debit { get; set; }
-        public decimal Credit { get; set; }
+        public string descripcion { get; set; }
+        public decimal debe { get; set; }
+        public decimal haber { get; set; }
         public decimal monto_total { get; set; }
         public DateTime? fecha_fac { get; set; }
 

@@ -211,6 +211,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CustomUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\FricaController.cs" />
     <Compile Include="Controllers\VlirController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\PurchaseDNController.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="Models\Auth\Access.cs" />
     <Compile Include="Models\Auth\AccessLogs.cs" />
     <Compile Include="Models\Branches.cs" />
+    <Compile Include="Models\FRICAFake.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\CustomSchema.cs" />
     <Compile Include="Models\People.cs" />
@@ -245,7 +247,9 @@
     <Compile Include="Models\ProyPrueba.cs" />
     <Compile Include="Models\ProjectJournal.cs" />
     <Compile Include="Models\ProjectName.cs" />
+    <Compile Include="Models\FRICA.cs" />
     <Compile Include="Models\VLIRFake.cs" />
+    <Compile Include="Models\FRICAInfo.cs" />
     <Compile Include="Models\VLIRInfo.cs" />
     <Compile Include="Models\VLIR.cs" />
     <Compile Include="Models\ProjectInfo.cs" />

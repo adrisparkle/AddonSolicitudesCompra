@@ -110,7 +110,7 @@ namespace AddonSolicitudesCompras.Logic
                 "Rrhh1234"))
             {
                 ouContex.ValidateCredentials("ADMNALRRHH", "Rrhh1234");
-                var u = findUser(user.People);
+                var u = findUser(user);
                 GroupPrincipal group = GroupPrincipal.FindByIdentity(ouContex, groupName);
                 if (group != null)
                 {
@@ -120,7 +120,45 @@ namespace AddonSolicitudesCompras.Logic
 
             return false;
         }
-        public Principal findUser(People person)
+        public bool ValidateGroup(string user, string sGrpName)
+        {
+            string userName = user.Split('@')[0];
+            PrincipalContext ouContex = new PrincipalContext(ContextType.Domain,
+                Domain,
+                "ADMNALRRHH@UCB.BO",
+                "Rrhh1234");
+            ouContex.ValidateCredentials("ADMNALRRHH", "Rrhh1234");
+            using (DirectoryEntry de = new DirectoryEntry("LDAP://UCB.BO",
+                "ADMNALRRHH",
+                "Rrhh1234"))
+            using (DirectorySearcher ds = new DirectorySearcher(de))
+            {
+                SearchResult src;
+                ds.Filter = "(&(sAMAccountName=" + userName + ")(objectClass=User)(objectCategory=Person))";
+                src = ds.FindOne();
+                string groupName = "";
+                foreach (var grp in src.Properties["memberOf"])
+                {
+
+                    DirectorySearcher gSearcher = new DirectorySearcher(de);
+                    gSearcher.Filter = "sAMAccountName=" + sGrpName;
+                    SearchResult gResult = gSearcher.FindOne();
+                    groupName = gResult.Properties["name"][0].ToString(); //obteniendo el nombre del grupo
+                }
+                
+                if (sGrpName.Equals(groupName))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            throw new NotImplementedException();
+        }
+        public Principal findUser(CustomUser username)
         {
             Principal user;
             PrincipalContext ouContex = new PrincipalContext(ContextType.Domain,
@@ -129,7 +167,8 @@ namespace AddonSolicitudesCompras.Logic
                 "Rrhh1234");
             ouContex.ValidateCredentials("ADMNALRRHH", "Rrhh1234");
             UserPrincipal up = new UserPrincipal(ouContex);
-            up.EmployeeId = person.CUNI;
+            up.UserPrincipalName = username.UserPrincipalName;
+            //up.EmployeeId = person.CUNI;
             PrincipalSearcher ps = new PrincipalSearcher(up);
             user = (UserPrincipal)ps.FindOne();
             return user;

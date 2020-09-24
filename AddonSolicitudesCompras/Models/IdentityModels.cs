@@ -22,7 +22,7 @@ namespace AddonSolicitudesCompras.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<People> Person { get; set; }
+        public DbSet<People> People { get; set; }
         public DbSet<Branches> Branch { get; set; }
         public DbSet<AccessLogs> AccessLogses { get; set; }
         //auth models
@@ -30,7 +30,6 @@ namespace AddonSolicitudesCompras.Models
         public DbSet<Rol> Rols { get; set; }
         public DbSet<RolhasAccess> RolshaAccesses { get; set; }
         public DbSet<CustomUser> CustomUsers { get; set; }
-
 
 
         static ApplicationDbContext()
